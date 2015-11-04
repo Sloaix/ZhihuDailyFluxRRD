@@ -11,7 +11,7 @@ import java.util.List;
 public class News extends BaseModel {
     //新闻的 id
     @JsonProperty("id")
-    private Long mId;
+    private Long mNewsId;
 
     // HTML 格式的新闻
     @JsonProperty("body")
@@ -87,5 +87,146 @@ public class News extends BaseModel {
         //栏目的缩略图
         @JsonProperty("thumbnail")
         private String mThumbnail;
+
+        @Override
+        public String toString() {
+            return "Section{" +
+                    "mId=" + mId +
+                    ", mName='" + mName + '\'' +
+                    ", mThumbnail='" + mThumbnail + '\'' +
+                    '}';
+        }
+    }
+
+    public Long getNewsId() {
+        return mNewsId;
+    }
+
+    public void setNewsId(Long newsId) {
+        mNewsId = newsId;
+    }
+
+    public String getBody() {
+        return mBody;
+    }
+
+    public void setBody(String body) {
+        mBody = body;
+    }
+
+    public String getImageSource() {
+        return mImageSource;
+    }
+
+    public void setImageSource(String imageSource) {
+        mImageSource = imageSource;
+    }
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(String title) {
+        mTitle = title;
+    }
+
+    public String getImage() {
+        return mImage;
+    }
+
+    public void setImage(String image) {
+        mImage = image;
+    }
+
+    public String getShareUrl() {
+        return mShareUrl;
+    }
+
+    public void setShareUrl(String shareUrl) {
+        mShareUrl = shareUrl;
+    }
+
+    public String getJs() {
+        return mJs;
+    }
+
+    public void setJs(String js) {
+        mJs = js;
+    }
+
+    public String getCss() {
+        return mCss;
+    }
+
+    public void setCss(String css) {
+        mCss = css;
+    }
+
+    public String getGaPrefix() {
+        return mGaPrefix;
+    }
+
+    public void setGaPrefix(String gaPrefix) {
+        mGaPrefix = gaPrefix;
+    }
+
+    public List<Recommender> getRecommenders() {
+        return mRecommenders;
+    }
+
+    public void setRecommenders(List<Recommender> recommenders) {
+        mRecommenders = recommenders;
+    }
+
+    public String getType() {
+        return mType;
+    }
+
+    public void setType(String type) {
+        mType = type;
+    }
+
+    public String getThemeId() {
+        return mThemeId;
+    }
+
+    public void setThemeId(String themeId) {
+        mThemeId = themeId;
+    }
+
+    public String getThemeName() {
+        return mThemeName;
+    }
+
+    public void setThemeName(String themeName) {
+        mThemeName = themeName;
+    }
+
+    public String getEditorName() {
+        return mEditorName;
+    }
+
+    public void setEditorName(String editorName) {
+        mEditorName = editorName;
+    }
+
+    @Override
+    public String toString() {
+        return "News{" +
+                "mNewsId=" + mNewsId +
+                ", mBody='" + mBody + '\'' +
+                ", mImageSource='" + mImageSource + '\'' +
+                ", mTitle='" + mTitle + '\'' +
+                ", mImage='" + mImage + '\'' +
+                ", mShareUrl='" + mShareUrl + '\'' +
+                ", mJs='" + mJs + '\'' +
+                ", mCss='" + mCss + '\'' +
+                ", mGaPrefix='" + mGaPrefix + '\'' +
+                ", mRecommenders=" + mRecommenders +
+                ", mType='" + mType + '\'' +
+                ", mThemeId='" + mThemeId + '\'' +
+                ", mThemeName='" + mThemeName + '\'' +
+                ", mEditorName='" + mEditorName + '\'' +
+                '}';
     }
 }

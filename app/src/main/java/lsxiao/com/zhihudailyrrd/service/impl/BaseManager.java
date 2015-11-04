@@ -10,7 +10,6 @@ import lsxiao.com.zhihudailyrrd.protocol.ClientApi;
  * @date 2015-11-03 22:28
  */
 public class BaseManager {
-
     @Inject
     ClientApi mApi;
 

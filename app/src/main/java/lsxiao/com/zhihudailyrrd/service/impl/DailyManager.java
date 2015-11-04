@@ -1,11 +1,11 @@
 package lsxiao.com.zhihudailyrrd.service.impl;
 
-import android.database.Observable;
 
-import lsxiao.com.zhihudailyrrd.model.LastestNews;
+import lsxiao.com.zhihudailyrrd.model.LatestNews;
 import lsxiao.com.zhihudailyrrd.model.News;
 import lsxiao.com.zhihudailyrrd.model.StartImage;
 import lsxiao.com.zhihudailyrrd.service.DataLayer;
+import rx.Observable;
 
 /**
  * @author lsxiao
@@ -13,7 +13,7 @@ import lsxiao.com.zhihudailyrrd.service.DataLayer;
  */
 public class DailyManager extends BaseManager implements DataLayer.DailyService {
     @Override
-    public Observable<LastestNews> getLatestNews() {
+    public Observable<LatestNews> getLatestNews() {
         return getApi().getLatestNews();
     }
 

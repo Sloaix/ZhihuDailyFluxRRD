@@ -14,4 +14,29 @@ public class StartImage extends BaseModel {
     //图像的 URL
     @JsonProperty("img")
     private String url;
+
+
+    public String getText() {
+        return mText;
+    }
+
+    public void setText(String text) {
+        mText = text;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "StartImage{" +
+                "mText='" + mText + '\'' +
+                ", url='" + url + '\'' +
+                '}';
+    }
 }

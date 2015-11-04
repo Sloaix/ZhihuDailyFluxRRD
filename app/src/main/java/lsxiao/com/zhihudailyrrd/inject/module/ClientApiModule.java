@@ -19,7 +19,7 @@ import retrofit.RxJavaCallAdapterFactory;
 @Module
 public class ClientApiModule {
     private static final String API_VERSION = "4";
-    private static final String BASE_URL = "http://news-at.zhihu.com/api/" + API_VERSION + "/";
+    private static final String BASE_URL = "http://news-at.zhihu.com/api/4/";
 
     // TODO: 15/11/3
     @Provides

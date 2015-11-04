@@ -12,6 +12,11 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -31,6 +36,8 @@ dependencies {
     provided libs.javaxAnnotation
     provided libs.supportAnnotation
     apt libs.daggerCompiler
+
+    compile libs.picasso
 
     compile libs.activeAndroid
     compile libs.jacksonCore

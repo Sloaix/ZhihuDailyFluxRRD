@@ -16,13 +16,13 @@ public class DataLayerModule {
 
     @Singleton
     @Provides
-    public DataLayer provideDataLayer(DataLayer.DailyService dailyService) {
-        return new DataLayer(dailyService);
+    public DataLayer.DailyService provideDailyManager() {
+        return new DailyManager();
     }
 
     @Singleton
     @Provides
-    public DataLayer.DailyService provideDailyManager() {
-        return new DailyManager();
+    public DataLayer provideDataLayer() {
+        return new DataLayer(provideDailyManager());
     }
 }

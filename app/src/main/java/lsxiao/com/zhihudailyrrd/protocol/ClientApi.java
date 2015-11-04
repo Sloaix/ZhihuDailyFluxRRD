@@ -1,12 +1,11 @@
 package lsxiao.com.zhihudailyrrd.protocol;
 
-import android.database.Observable;
-
-import lsxiao.com.zhihudailyrrd.model.LastestNews;
+import lsxiao.com.zhihudailyrrd.model.LatestNews;
 import lsxiao.com.zhihudailyrrd.model.News;
 import lsxiao.com.zhihudailyrrd.model.StartImage;
 import retrofit.http.GET;
 import retrofit.http.Path;
+import rx.Observable;
 
 /**
  * @author lsxiao
@@ -29,19 +28,19 @@ public interface ClientApi {
     String URL_GET_START_IMAGE = "start-image/1080*1776";
 
     //获取最新日报新闻列表
-    String URL_GET_LASTEST_NEWS = "news/latest";
+    String URL_GET_LATEST_NEWS = "news/latest";
 
     //获取新闻
-    String URL_GET_NEWS = "news/{" + FIELD_NEWS_ID + "}";
+    String URL_GET_NEWS = "news/{newsId}";
 
 
     /**
      * 获取最新日报新闻列表
      *
-     * @return LastestNews
+     * @return LatestNews
      */
-    @GET(URL_GET_NEWS)
-    Observable<LastestNews> getLatestNews();
+    @GET(URL_GET_LATEST_NEWS)
+    Observable<LatestNews> getLatestNews();
 
     /**
      * 获取启动图片

@@ -1,17 +1,16 @@
 package lsxiao.com.zhihudailyrrd.service;
 
-import android.database.Observable;
 
-import lsxiao.com.zhihudailyrrd.model.LastestNews;
+import lsxiao.com.zhihudailyrrd.model.LatestNews;
 import lsxiao.com.zhihudailyrrd.model.News;
 import lsxiao.com.zhihudailyrrd.model.StartImage;
+import rx.Observable;
 
 /**
  * @author lsxiao
  * @date 2015-11-03 22:28
  */
 public class DataLayer {
-
     DailyService mDailyService;
 
     public DataLayer(DailyService dailyService) {
@@ -27,9 +26,9 @@ public class DataLayer {
         /**
          * 获取最新日报新闻列表
          *
-         * @return LastestNews
+         * @return LatestNews
          */
-        Observable<LastestNews> getLatestNews();
+        Observable<LatestNews> getLatestNews();
 
         /**
          * 获取启动图片

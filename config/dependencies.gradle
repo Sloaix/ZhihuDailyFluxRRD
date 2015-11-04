@@ -16,6 +16,7 @@ ext {
     //Libraries
     dagger = '2.0'
     active = '3.1.0-SNAPSHOT'
+    picasso = "2.5.2"
     butterKnife = '7.0.1'
     rxJava = '1.0.14'
     rxAndroid = '1.0.1'
@@ -32,6 +33,7 @@ ext {
 
     libs = [
             activeAndroid       : "com.michaelpardo:activeandroid:${active}",
+            picasso             : "com.squareup.picasso:picasso:${picasso}",
             daggerCompiler      : "com.google.dagger:dagger-compiler:${dagger}",
             dagger              : "com.google.dagger:dagger:${dagger}",
             butterKnife         : "com.jakewharton:butterknife:${butterKnife}",
