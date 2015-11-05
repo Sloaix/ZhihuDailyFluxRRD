@@ -18,9 +18,8 @@ public class News extends BaseModel {
     private String mBody;
 
     //图片的内容提供方。为了避免被起诉非法使用图片，在显示图片时最好附上其版权信息。
-    @JsonProperty("image-source")
+    @JsonProperty("image_source")
     private String mImageSource;
-
     //新闻标题
     @JsonProperty("title")
     private String mTitle;
@@ -35,11 +34,11 @@ public class News extends BaseModel {
 
     // 供手机端的 WebView(UIWebView) 使用
     @JsonProperty("js")
-    private String mJs;
+    private List<String> mJsList;
 
     //供手机端的 WebView(UIWebView) 使用
     @JsonProperty("css")
-    private String mCss;
+    private List<String> mCssList;
 
     //供 Google Analytics 使用
     @JsonProperty("ga_prefix")
@@ -71,6 +70,10 @@ public class News extends BaseModel {
     //编辑者名
     @JsonProperty("editor_name")
     private String mEditorName;
+
+    //栏目
+    @JsonProperty("section")
+    private Section mSection;
 
     /**
      * 栏目的信息
@@ -146,20 +149,20 @@ public class News extends BaseModel {
         mShareUrl = shareUrl;
     }
 
-    public String getJs() {
-        return mJs;
+    public List<String> getJsList() {
+        return mJsList;
     }
 
-    public void setJs(String js) {
-        mJs = js;
+    public void setJsList(List<String> jsList) {
+        mJsList = jsList;
     }
 
-    public String getCss() {
-        return mCss;
+    public List<String> getCssList() {
+        return mCssList;
     }
 
-    public void setCss(String css) {
-        mCss = css;
+    public void setCssList(List<String> cssList) {
+        mCssList = cssList;
     }
 
     public String getGaPrefix() {
@@ -219,8 +222,8 @@ public class News extends BaseModel {
                 ", mTitle='" + mTitle + '\'' +
                 ", mImage='" + mImage + '\'' +
                 ", mShareUrl='" + mShareUrl + '\'' +
-                ", mJs='" + mJs + '\'' +
-                ", mCss='" + mCss + '\'' +
+                ", mJsList=" + mJsList +
+                ", mCssList=" + mCssList +
                 ", mGaPrefix='" + mGaPrefix + '\'' +
                 ", mRecommenders=" + mRecommenders +
                 ", mType='" + mType + '\'' +

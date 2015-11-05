@@ -18,6 +18,7 @@ import lsxiao.com.zhihudailyrrd.service.DataLayer;
  * @date 2015-11-03 22:28
  */
 public abstract class BaseDialogFragment extends DialogFragment {
+    public static final String TAG = BaseDialogFragment.TAG;
     @Inject
     DataLayer mDataLayer;
     protected View mRootView;

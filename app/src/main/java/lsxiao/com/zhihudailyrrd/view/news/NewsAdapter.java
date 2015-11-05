@@ -22,10 +22,12 @@ import lsxiao.com.zhihudailyrrd.model.Story;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private List<Story> mStories;
     private Context mContext;
+    private View.OnClickListener mListener;
 
-    public NewsAdapter(List<Story> stories, Context context) {
-        mStories = stories;
+    public NewsAdapter(Context context, List<Story> stories, View.OnClickListener listener) {
         mContext = context;
+        mStories = stories;
+        mListener = listener;
     }
 
     /**
@@ -47,7 +49,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_story_normal, parent, false);
+        final View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_news, parent, false);
         return new ViewHolder(itemView);
     }
 
@@ -60,7 +62,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         //加载图片
         Picasso.with(mContext)
                 .load(story.getImageUrls().get(0))
+                .placeholder(R.drawable.ic_placeholder)
                 .into(holder.mIvNewsThumbnail);
+
+        //
+        holder.itemView.setOnClickListener(mListener);
     }
 
     @Override
