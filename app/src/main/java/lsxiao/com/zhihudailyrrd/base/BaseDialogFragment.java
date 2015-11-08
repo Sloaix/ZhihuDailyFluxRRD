@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import lsxiao.com.zhihudailyrrd.inject.component.DataLayerComponent;
+import lsxiao.com.zhihudailyrrd.inject.component.AppLayerComponent;
 import lsxiao.com.zhihudailyrrd.service.DataLayer;
 
 /**
@@ -24,7 +24,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
     protected View mRootView;
 
     public BaseDialogFragment() {
-        DataLayerComponent.Instance.get().inject(this);
+        AppLayerComponent.Instance.get().inject(this);
     }
 
     @Nullable

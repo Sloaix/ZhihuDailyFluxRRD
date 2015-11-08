@@ -37,22 +37,30 @@ dependencies {
     provided libs.supportAnnotation
     apt libs.daggerCompiler
 
-    compile libs.picasso
-
-    compile libs.activeAndroid
-    compile libs.jacksonCore
-    compile libs.jacksonAnnotations
-
+    //support
     compile libs.appcompat
     compile libs.recyclerView
     compile libs.supportDesign
+    compile libs.cardView
 
+    //image loader
+    compile libs.picasso
+    compile libs.nineOld
+
+    //image slider
+
+    compile libs.imageSlider
+
+    //inject
+    compile libs.dagger
     compile libs.butterKnife
-    compile libs.jacksonDatabind
+
+    //json
+    compile libs.gson
+    compile libs.retrofitWithGson
 
     //retrofit
     compile libs.retrofit
-    compile libs.retrofitWithJackson
     compile libs.retrofitWithRxJava
 
     //okHttp
@@ -65,8 +73,7 @@ dependencies {
     compile libs.rxLifecycle
     compile libs.rxComponent
 
-    //dagger
-    compile libs.dagger
+    compile libs.circleImage
 
-
+    compile libs.jodaTime
 }

@@ -1,24 +1,25 @@
 package lsxiao.com.zhihudailyrrd.base;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import lsxiao.com.zhihudailyrrd.inject.component.DataLayerComponent;
+import lsxiao.com.zhihudailyrrd.inject.component.AppLayerComponent;
 import lsxiao.com.zhihudailyrrd.service.DataLayer;
 
 /**
  * @author lsxiao
  * @date 2015-11-03 22:28
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends RxAppCompatActivity {
     @Inject
     DataLayer mDataLayer;
 
     public BaseActivity() {
-        DataLayerComponent.Instance.get().inject(this);
+        AppLayerComponent.Instance.get().inject(this);
     }
 
     public DataLayer getDataLayer() {

@@ -1,6 +1,6 @@
 package lsxiao.com.zhihudailyrrd.protocol;
 
-import lsxiao.com.zhihudailyrrd.model.LatestNews;
+import lsxiao.com.zhihudailyrrd.model.TodayNews;
 import lsxiao.com.zhihudailyrrd.model.News;
 import lsxiao.com.zhihudailyrrd.model.StartImage;
 import retrofit.http.GET;
@@ -35,12 +35,12 @@ public interface ClientApi {
 
 
     /**
-     * 获取最新日报新闻列表
+     * 获取今日日报新闻列表
      *
-     * @return LatestNews
+     * @return TodayNews
      */
     @GET(URL_GET_LATEST_NEWS)
-    Observable<LatestNews> getLatestNews();
+    Observable<TodayNews> getTodayNews();
 
     /**
      * 获取启动图片

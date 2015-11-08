@@ -1,35 +1,28 @@
 package lsxiao.com.zhihudailyrrd.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 /**
  * @author lsxiao
  * @date 2015-11-03 23:06
  */
-public class StartImage extends BaseModel {
-    //供显示的图片版权信息
-    @JsonProperty("text")
-    private String mText;
-
+public class StartImage implements Serializable {
     //图像的 URL
-    @JsonProperty("img")
+    @SerializedName("img")
     private String url;
 
-
-    public String getText() {
-        return mText;
-    }
-
-    public void setText(String text) {
-        mText = text;
-    }
+    //供显示的图片版权信息
+    @SerializedName("text")
+    private String mText;
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public String getText() {
+        return mText;
     }
 
     @Override

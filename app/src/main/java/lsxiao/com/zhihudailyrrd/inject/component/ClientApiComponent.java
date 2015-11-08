@@ -16,7 +16,7 @@ import lsxiao.com.zhihudailyrrd.service.impl.BaseManager;
 public interface ClientApiComponent {
 
     void inject(BaseManager manager);
-    
+
     class Instance {
         private static ClientApiComponent sComponent;
 

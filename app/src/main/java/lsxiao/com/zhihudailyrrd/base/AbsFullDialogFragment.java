@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
  * @author lsxiao
  * @date 2015-11-05 09:15
  */
-public abstract class FullScreenDialogFragment extends BaseDialogFragment {
+public abstract class AbsFullDialogFragment extends BaseDialogFragment {
 
     @NonNull
     @Override

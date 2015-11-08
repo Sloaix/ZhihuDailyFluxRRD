@@ -8,15 +8,15 @@ import dagger.Component;
 import lsxiao.com.zhihudailyrrd.base.BaseActivity;
 import lsxiao.com.zhihudailyrrd.base.BaseDialogFragment;
 import lsxiao.com.zhihudailyrrd.base.BaseFragment;
-import lsxiao.com.zhihudailyrrd.inject.module.DataLayerModule;
+import lsxiao.com.zhihudailyrrd.inject.module.AppLayerModule;
 
 /**
  * @author lsxiao
  * @date 2015-11-04 00:47
  */
 @Singleton
-@Component(dependencies = DataLayerModule.class)
-public interface DataLayerComponent {
+@Component(dependencies = AppLayerModule.class)
+public interface AppLayerComponent {
 
     void inject(BaseActivity activity);
 
@@ -24,15 +24,14 @@ public interface DataLayerComponent {
 
     void inject(BaseDialogFragment dialogFragment);
 
-
     class Instance {
-        private static DataLayerComponent sComponent;
+        private static AppLayerComponent sComponent;
 
-        public static void init(@NonNull DataLayerComponent component) {
+        public static void init(@NonNull AppLayerComponent component) {
             sComponent = component;
         }
 
-        public static DataLayerComponent get() {
+        public static AppLayerComponent get() {
             return sComponent;
         }
     }

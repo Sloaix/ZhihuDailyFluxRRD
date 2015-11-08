@@ -15,7 +15,6 @@ ext {
 
     //Libraries
     dagger = '2.0'
-    active = '3.1.0-SNAPSHOT'
     picasso = "2.5.2"
     butterKnife = '7.0.1'
     rxJava = '1.0.14'
@@ -25,14 +24,17 @@ ext {
     javaxAnnotation = '10.0-b28'
     retrofit = "2.0.0-beta2"
     okHttp = "2.6.0-SNAPSHOT"
-    jackson = "2.6.3"
     jotaTime = "2.8.2"
+    imageSlider = "1.1.5@aar"
+    nineOld = "2.4.0"
+    gson = "2.4"
+
+    circleImage = "2.0.0"
 
     //Test
     jUnit = '4.12'
 
     libs = [
-            activeAndroid       : "com.michaelpardo:activeandroid:${active}",
             picasso             : "com.squareup.picasso:picasso:${picasso}",
             daggerCompiler      : "com.google.dagger:dagger-compiler:${dagger}",
             dagger              : "com.google.dagger:dagger:${dagger}",
@@ -50,13 +52,14 @@ ext {
             rxBinding           : "com.jakewharton.rxbinding:rxbinding:${rxBinding}",
             javaxAnnotation     : "org.glassfish:javax.annotation:${javaxAnnotation}",
             retrofit            : "com.squareup.retrofit:retrofit:${retrofit}",
-            retrofitWithJackson : "com.squareup.retrofit:converter-jackson:${retrofit}",
+            retrofitWithGson    : "com.squareup.retrofit:converter-gson:${retrofit}",
             retrofitWithRxJava  : "com.squareup.retrofit:adapter-rxjava:${retrofit}",
             okHttpLogInterceptor: "com.squareup.okhttp:logging-interceptor:${okHttp}",
-            jacksonDatabind     : "com.fasterxml.jackson.core:jackson-databind:${jackson}",
             jodaTime            : "joda-time:joda-time:${jotaTime}",
-            jacksonAnnotations  : "com.fasterxml.jackson.core:jackson-annotations:${jackson}",
-            jacksonCore         : "com.fasterxml.jackson.core:jackson-core:${jackson}",
+            imageSlider         : "com.daimajia.slider:library:${imageSlider}",
+            nineOld             : "com.nineoldandroids:library:${nineOld}",
+            gson                : "com.google.code.gson:gson:${gson}",
+            circleImage         : "de.hdodenhof:circleimageview:${circleImage}"
     ]
 
 
