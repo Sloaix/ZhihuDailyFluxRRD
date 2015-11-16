@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">知乎日报</string>
+    <string name="today_news">今日热文</string>
+    <string name="action_settings">设置</string>
+    <string name="click_again_to_exit_app">再按一次退出知乎日报</string>
+    <string name="right">版权</string>
+    <string name="no_news">没有新闻</string>
+    <string name="load_fail">加载失败,请重试</string>
+</resources>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:orientation="horizontal"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_story_thumbnail"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_placeholder"
+        app:civ_border_color="#ffffff"
+        app:civ_border_width="2dp"/>
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="12dp"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:freezesText="true"
+        android:gravity="center_vertical|start"
+        android:lineSpacingMultiplier="1.2"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLines="2"
+        android:scrollHorizontally="true"
+        android:textColor="#99000000"
+        android:textSize="14sp"
+        tools:text="这就是理想主义，对彼此，对现实的妥协"/>
+
+</LinearLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/cpb_loading"
+        style="?android:attr/android:progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+    <ImageView
+        android:id="@+id/iv_slider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_shadow_mask"/>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        android:alpha="0.8"
+        android:gravity="top"
+        android:lines="2"
+        android:padding="16dp"
+        android:textColor="#ffffff"
+        android:textSize="18sp"/>
+</FrameLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary">#3F51B5</color>
+    <color name="color_primary_dark">#303F9F</color>
+    <color name="color_accent">#448AFF</color>
+    <color name="color_divider">#eeeeee</color>
+    <color name="color_list_item_pressed">@color/color_primary</color>
+    <color name="color_list_item_normal">#fff</color>
+    <color name="color_list_Item_text_pressed">#fff</color>
+    <color name="color_list_Item_text_normal">#454545</color>
+    <color name="color_source">#a1ffffff</color>
+</resources>

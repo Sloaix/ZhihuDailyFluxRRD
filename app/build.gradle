@@ -1,0 +1,79 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        applicationId "lsxiao.com.zhihudailyrrd"
+        minSdkVersion 21
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    //Test
+    def test = parent.ext.test
+    testCompile test.junit
+
+    //Dependencies
+    def libs = parent.ext.libs
+    provided libs.javaxAnnotation
+    provided libs.supportAnnotation
+    apt libs.daggerCompiler
+
+    //support
+    compile libs.appcompat
+    compile libs.recyclerView
+    compile libs.supportDesign
+    compile libs.cardView
+
+    //image loader
+    compile libs.picasso
+    compile libs.nineOld
+
+    //image slider
+
+    compile libs.imageSlider
+
+    //inject
+    compile libs.dagger
+    compile libs.butterKnife
+
+    //json
+    compile libs.gson
+    compile libs.retrofitWithGson
+
+    //retrofit
+    compile libs.retrofit
+    compile libs.retrofitWithRxJava
+
+    //okHttp
+    compile libs.okHttpLogInterceptor
+
+    //rxJava
+    compile libs.rxJava
+    compile libs.rxAndroid
+    compile libs.rxBinding
+    compile libs.rxLifecycle
+    compile libs.rxComponent
+
+    compile libs.circleImage
+
+    compile libs.jodaTime
+}
