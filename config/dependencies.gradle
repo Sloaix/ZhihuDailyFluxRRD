@@ -7,11 +7,11 @@ allprojects {
 
 ext {
     //Android
-    androidBuildTools = "23.0.1"
+    androidBuildTools = "23.0.2"
     androidMinSdk = 21
     androidTargetSdk = 23
     androidCompileSdk = 23
-    androidSupport = "23.1.0"
+    androidSupport = "23.1.1"
 
     //Libraries
     dagger = '2.0'

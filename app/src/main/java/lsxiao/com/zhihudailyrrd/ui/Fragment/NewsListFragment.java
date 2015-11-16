@@ -7,12 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.trello.rxlifecycle.FragmentEvent;
+
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 
@@ -23,19 +24,20 @@ import lsxiao.com.zhihudailyrrd.base.DividerItemDecoration;
 import lsxiao.com.zhihudailyrrd.model.TodayNews;
 import lsxiao.com.zhihudailyrrd.ui.Activity.NewsDetailActivity;
 import lsxiao.com.zhihudailyrrd.ui.Adapter.NewsListAdapter;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
  * @author lsxiao
- * @date 2015-11-03 23:43
+ *         date 2015-11-03 23:43
  */
 public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
     public static final int SPAN_COUNT = 1;//列数
 
-    //新闻适配器
     NewsListAdapter mNewsListAdapter;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -61,7 +63,7 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         init();
-        remoteData();
+        loadData();
     }
 
 
@@ -93,16 +95,32 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
                 DividerItemDecoration.VERTICAL_LIST));
     }
 
-    private void remoteData() {
-        getDataLayer().getDailyService()
-                .getTodayNews()
-                .compose(this.<TodayNews>bindUntilEvent(FragmentEvent.PAUSE))
-                .doOnNext(new Action1<TodayNews>() {
+    private void loadData() {
+        String nowDateStr = DateTime.now().minusDays(1).toString("yyyyMMdd");
+        Observable<TodayNews> cache = getDataLayer().getDailyService().getLocalTodayNews(nowDateStr);
+        Observable<TodayNews> network = getDataLayer().getDailyService().getTodayNews();
+
+        //输出前缓存一下
+        network.doOnNext(new Action1<TodayNews>() {
+            @Override
+            public void call(TodayNews todayNews) {
+                getDataLayer().getDailyService().cacheTodayNews(todayNews);
+            }
+        });
+
+
+        //先获取缓存里面的数据
+        Observable<TodayNews> source = Observable
+                .concat(cache, network)
+                .first(new Func1<TodayNews, Boolean>() {
                     @Override
-                    public void call(TodayNews todayNews) {
-                        getDataLayer().getDailyService().cacheTodayNews(todayNews);
+                    public Boolean call(TodayNews todayNews) {
+                        //如果本地数据存在的话
+                        return todayNews != null;
                     }
-                })
+                });
+
+        source.compose(this.<TodayNews>bindUntilEvent(FragmentEvent.PAUSE))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Action0() {
@@ -140,7 +158,6 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
                     @Override
                     public void call(Throwable throwable) {
                         throwable.printStackTrace();
-                        Log.d("xls", throwable.getMessage());
                         //停止显示刷新动画
                         hideProgress();
                         Toast.makeText(getActivity(), getString(R.string.load_fail), Toast.LENGTH_SHORT).show();
@@ -152,7 +169,7 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        remoteData();
+        loadData();
     }
 
     @Override

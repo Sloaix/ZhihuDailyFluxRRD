@@ -1,30 +1,22 @@
 package lsxiao.com.zhihudailyrrd.service.impl;
 
 
-import org.joda.time.DateTime;
-
 import lsxiao.com.zhihudailyrrd.model.News;
 import lsxiao.com.zhihudailyrrd.model.StartImage;
 import lsxiao.com.zhihudailyrrd.model.TodayNews;
 import lsxiao.com.zhihudailyrrd.service.DataLayer;
-import lsxiao.com.zhihudailyrrd.util.NetUtil;
 import lsxiao.com.zhihudailyrrd.util.SpUtil;
 import rx.Observable;
 import rx.Subscriber;
 
 /**
  * @author lsxiao
- * @date 2015-11-03 22:28
+ * date 2015-11-03 22:28
  */
 public class DailyManager extends BaseManager implements DataLayer.DailyService {
     @Override
     public Observable<TodayNews> getTodayNews() {
-        if (NetUtil.isNetworkConnected()) {
-            return getApi().getTodayNews();
-        } else {
-            return getLocalTodayNews(DateTime.now().minusDays(1).toString("yyyyMMdd"));
-        }
-
+        return getApi().getTodayNews();
     }
 
     @Override
@@ -34,12 +26,7 @@ public class DailyManager extends BaseManager implements DataLayer.DailyService 
 
     @Override
     public Observable<News> getNews(long newsId) {
-        if (NetUtil.isNetworkConnected()) {
-            return getApi().getNews(newsId);
-        } else {
-            return getLocalNews(String.valueOf(newsId));
-        }
-
+        return getApi().getNews(newsId);
     }
 
     @Override

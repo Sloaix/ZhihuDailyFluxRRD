@@ -17,8 +17,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.trello.rxlifecycle.FragmentEvent;
 
-import java.util.concurrent.TimeUnit;
-
 import butterknife.Bind;
 import lsxiao.com.zhihudailyrrd.R;
 import lsxiao.com.zhihudailyrrd.base.BaseFragment;
@@ -26,14 +24,16 @@ import lsxiao.com.zhihudailyrrd.base.BundleKey;
 import lsxiao.com.zhihudailyrrd.model.News;
 import lsxiao.com.zhihudailyrrd.model.TodayNews;
 import lsxiao.com.zhihudailyrrd.util.HtmlUtil;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
  * @author lsxiao
- * @date 2015-11-05 10:27
+ * date 2015-11-05 10:27
  */
 public class NewsDetailFragment extends BaseFragment {
     @Bind(R.id.wv_news)
@@ -74,7 +74,7 @@ public class NewsDetailFragment extends BaseFragment {
     protected void afterCreate(Bundle savedInstanceState) {
         mStory = (TodayNews.Story) getArguments().getSerializable(BundleKey.STORY);
         init();
-        remoteData();
+        loadData();
     }
 
     private void init() {
@@ -113,16 +113,35 @@ public class NewsDetailFragment extends BaseFragment {
         mCpbLoading.setVisibility(View.GONE);
     }
 
-    private void remoteData() {
-        getDataLayer()
-                .getDailyService()
-                .getNews(mStory.getId())
-                .delay(500, TimeUnit.SECONDS)
-                .compose(this.<News>bindUntilEvent(FragmentEvent.PAUSE))
+    private void loadData() {
+        Observable<News> network = getDataLayer().getDailyService().getNews(mStory.getId());
+        Observable<News> cache = getDataLayer().getDailyService().getLocalNews(String.valueOf(mStory.getId()));
+
+
+        //输出数据前缓存
+        network.doOnNext(new Action1<News>() {
+            @Override
+            public void call(News news) {
+                getDataLayer().getDailyService().cacheNews(news);
+            }
+        });
+
+        //默认先从本地取数据
+        Observable<News> source = Observable.concat(cache, network).first(new Func1<News, Boolean>() {
+            @Override
+            public Boolean call(News news) {
+                //如果本地数据存在的话
+                return news != null;
+            }
+        });
+
+        source.compose(this.<News>bindUntilEvent(FragmentEvent.PAUSE))
                 .doOnNext(new Action1<News>() {
                     @Override
                     public void call(News news) {
-                        getDataLayer().getDailyService().cacheNews(news);
+                        if (news != null) {
+                            getDataLayer().getDailyService().cacheNews(news);
+                        }
                     }
                 })
                 .subscribeOn(Schedulers.io())
