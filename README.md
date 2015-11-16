@@ -8,7 +8,9 @@ This simple example is created by RRD(Retrofit,RxJava,Dagger2).
 
 ## 截图
 
-
+[1](https://github.com/lsxiao/ZhihuDailyRRD/blob/master/screenshot/Screenshot_20151116-231003.png?raw=true)
+[2](https://github.com/lsxiao/ZhihuDailyRRD/blob/master/screenshot/Screenshot_20151116-231009.png?raw=true)
+[3](https://github.com/lsxiao/ZhihuDailyRRD/blob/master/screenshot/Screenshot_20151116-231014.png?raw=true)
 
 ##API
 
