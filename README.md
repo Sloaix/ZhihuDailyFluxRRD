@@ -6,6 +6,8 @@ This simple example is created by RRD(Retrofit,RxJava,Dagger2).
 
 这是一个使用Retrofit RxJava Dagger2创建的简单示例。
 
+minSdkVersion 21
+
 ##项目结构
 
 ![](https://github.com/lsxiao/ZhihuDailyRRD/blob/master/screenshot/structure.png?raw=true)
