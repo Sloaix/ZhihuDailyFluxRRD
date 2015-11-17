@@ -8,16 +8,8 @@ This simple example is created by RRD(Retrofit,RxJava,Dagger2).
 
 ##项目结构
 
-* base (基类)  
-inject (Dagger2注入)
-component (组件)
-* module (模块)
-* model (数据结构)
-* protocol (接口Retrofit2)
-* service (服务)
-* ui (UI界面)
-* util (工具类)
-* view (自定义View)
+![](https://github.com/lsxiao/ZhihuDailyRRD/blob/master/screenshot/structure.png?raw=true)
+
 
 ## 截图
 
