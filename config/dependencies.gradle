@@ -23,7 +23,7 @@ ext {
     rxBinding = '0.3.0'
     javaxAnnotation = '10.0-b28'
     retrofit = "2.0.0-beta2"
-    okHttp = "2.6.0-SNAPSHOT"
+    okHttp = "2.6.0"
     jotaTime = "2.8.2"
     imageSlider = "1.1.5@aar"
     nineOld = "2.4.0"

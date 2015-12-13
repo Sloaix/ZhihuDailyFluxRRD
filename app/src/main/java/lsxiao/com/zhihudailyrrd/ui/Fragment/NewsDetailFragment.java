@@ -33,7 +33,7 @@ import rx.schedulers.Schedulers;
 
 /**
  * @author lsxiao
- * date 2015-11-05 10:27
+ *         date 2015-11-05 10:27
  */
 public class NewsDetailFragment extends BaseFragment {
     @Bind(R.id.wv_news)
@@ -114,12 +114,15 @@ public class NewsDetailFragment extends BaseFragment {
     }
 
     private void loadData() {
+        //服务端数据源
         Observable<News> network = getDataLayer().getDailyService().getNews(mStory.getId());
+
+        //缓存数据源
         Observable<News> cache = getDataLayer().getDailyService().getLocalNews(String.valueOf(mStory.getId()));
 
 
-        //输出数据前缓存
-        network.doOnNext(new Action1<News>() {
+        //输出数据前缓存到本地
+        network = network.doOnNext(new Action1<News>() {
             @Override
             public void call(News news) {
                 getDataLayer().getDailyService().cacheNews(news);
@@ -135,7 +138,8 @@ public class NewsDetailFragment extends BaseFragment {
             }
         });
 
-        source.compose(this.<News>bindUntilEvent(FragmentEvent.PAUSE))
+
+        source.compose(this.<News>bindUntilEvent(FragmentEvent.PAUSE))//当PAUSE时，不再发出事件
                 .doOnNext(new Action1<News>() {
                     @Override
                     public void call(News news) {

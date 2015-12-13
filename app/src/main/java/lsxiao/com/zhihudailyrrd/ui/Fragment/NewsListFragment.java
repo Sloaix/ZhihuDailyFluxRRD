@@ -97,11 +97,14 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
 
     private void loadData() {
         String nowDateStr = DateTime.now().minusDays(1).toString("yyyyMMdd");
+        //缓存数据源
         Observable<TodayNews> cache = getDataLayer().getDailyService().getLocalTodayNews(nowDateStr);
+
+        //服务端数据源
         Observable<TodayNews> network = getDataLayer().getDailyService().getTodayNews();
 
         //输出前缓存一下
-        network.doOnNext(new Action1<TodayNews>() {
+        network = network.doOnNext(new Action1<TodayNews>() {
             @Override
             public void call(TodayNews todayNews) {
                 getDataLayer().getDailyService().cacheTodayNews(todayNews);
