@@ -18,6 +18,7 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import lsxiao.com.zhihudailyrrd.R;
 import lsxiao.com.zhihudailyrrd.base.BaseFragment;
 import lsxiao.com.zhihudailyrrd.base.DividerItemDecoration;

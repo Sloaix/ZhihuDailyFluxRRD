@@ -7,27 +7,27 @@ allprojects {
 
 ext {
     //Android
-    androidBuildTools = "23.0.2"
+    androidBuildTools = "23.0.3"
     androidMinSdk = 21
     androidTargetSdk = 23
     androidCompileSdk = 23
-    androidSupport = "23.1.1"
+    androidSupport = "23.2.1"
 
     //Libraries
-    dagger = '2.0'
+    dagger = '2.2'
     picasso = "2.5.2"
     butterKnife = '7.0.1'
-    rxJava = '1.0.14'
-    rxAndroid = '1.0.1'
-    rxLifecycle = '0.3.0'
-    rxBinding = '0.3.0'
+    rxJava = '1.1.3'
+    rxAndroid = '1.1.0'
+    rxLifecycle = '0.5.0'
+    rxBinding = '0.4.0'
     javaxAnnotation = '10.0-b28'
-    retrofit = "2.0.0-beta2"
-    okHttp = "2.6.0"
+    retrofit = "2.0.2"
+    okHttp = "3.2.0"
     jotaTime = "2.8.2"
     imageSlider = "1.1.5@aar"
     nineOld = "2.4.0"
-    gson = "2.4"
+    gson = "2.6.2"
 
     circleImage = "2.0.0"
 
@@ -51,10 +51,10 @@ ext {
             rxComponent         : "com.trello:rxlifecycle-components:${rxLifecycle}",
             rxBinding           : "com.jakewharton.rxbinding:rxbinding:${rxBinding}",
             javaxAnnotation     : "org.glassfish:javax.annotation:${javaxAnnotation}",
-            retrofit            : "com.squareup.retrofit:retrofit:${retrofit}",
-            retrofitWithGson    : "com.squareup.retrofit:converter-gson:${retrofit}",
-            retrofitWithRxJava  : "com.squareup.retrofit:adapter-rxjava:${retrofit}",
-            okHttpLogInterceptor: "com.squareup.okhttp:logging-interceptor:${okHttp}",
+            retrofit            : "com.squareup.retrofit2:retrofit:${retrofit}",
+            retrofitWithGson    : "com.squareup.retrofit2:converter-gson:${retrofit}",
+            retrofitWithRxJava  : "com.squareup.retrofit2:adapter-rxjava:${retrofit}",
+            okHttpLogInterceptor: "com.squareup.okhttp3:logging-interceptor:${okHttp}",
             jodaTime            : "joda-time:joda-time:${jotaTime}",
             imageSlider         : "com.daimajia.slider:library:${imageSlider}",
             nineOld             : "com.nineoldandroids:library:${nineOld}",

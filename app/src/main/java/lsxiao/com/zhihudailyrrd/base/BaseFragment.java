@@ -43,8 +43,8 @@ public abstract class BaseFragment extends RxFragment {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroyView() {
+        super.onDestroyView();
         ButterKnife.unbind(this);
     }
 

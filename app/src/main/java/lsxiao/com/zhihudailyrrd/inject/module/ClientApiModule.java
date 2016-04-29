@@ -2,18 +2,18 @@ package lsxiao.com.zhihudailyrrd.inject.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.logging.HttpLoggingInterceptor;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import lsxiao.com.zhihudailyrrd.protocol.GsonConverterFactory;
 import lsxiao.com.zhihudailyrrd.protocol.ClientApi;
-import retrofit.Converter;
-import retrofit.Retrofit;
-import retrofit.RxJavaCallAdapterFactory;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Converter;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @author xiaolishang
@@ -62,7 +62,7 @@ public class ClientApiModule {
     @Singleton
     public OkHttpClient provideClient(HttpLoggingInterceptor loggingInterceptor) {
         OkHttpClient client = new OkHttpClient();
-        client.interceptors().add(loggingInterceptor);
+//        client.interceptors().add(loggingInterceptor);
         return client;
     }
 }

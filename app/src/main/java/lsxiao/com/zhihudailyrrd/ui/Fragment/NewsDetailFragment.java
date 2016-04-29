@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.trello.rxlifecycle.FragmentEvent;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.Bind;
 import lsxiao.com.zhihudailyrrd.R;
 import lsxiao.com.zhihudailyrrd.base.BaseFragment;
@@ -140,6 +142,7 @@ public class NewsDetailFragment extends BaseFragment {
 
 
         source.compose(this.<News>bindUntilEvent(FragmentEvent.PAUSE))//当PAUSE时，不再发出事件
+                .delay(1, TimeUnit.SECONDS)//延迟一秒显示，让loading过渡更自然
                 .doOnNext(new Action1<News>() {
                     @Override
                     public void call(News news) {

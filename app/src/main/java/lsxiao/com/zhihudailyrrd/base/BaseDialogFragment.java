@@ -41,16 +41,15 @@ public abstract class BaseDialogFragment extends DialogFragment {
         afterCreate(savedInstanceState);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        ButterKnife.unbind(this);
-    }
-
     public DataLayer getDataLayer() {
         return mDataLayer;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
 
     protected abstract int getLayoutId();
 
