@@ -73,7 +73,7 @@ public class DataLayer {
 
 
         /**
-         * 获取本地新闻
+         * 缓存今日热文列表
          *
          * @param todayNews TodayNews
          * @return Void

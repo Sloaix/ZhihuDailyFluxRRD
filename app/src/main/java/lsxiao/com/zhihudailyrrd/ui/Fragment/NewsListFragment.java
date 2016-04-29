@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.trello.rxlifecycle.FragmentEvent;
 
 import org.joda.time.DateTime;
@@ -18,9 +19,9 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import lsxiao.com.zhihudailyrrd.R;
 import lsxiao.com.zhihudailyrrd.base.BaseFragment;
+import lsxiao.com.zhihudailyrrd.base.BundleKey;
 import lsxiao.com.zhihudailyrrd.base.DividerItemDecoration;
 import lsxiao.com.zhihudailyrrd.model.TodayNews;
 import lsxiao.com.zhihudailyrrd.ui.Activity.NewsDetailActivity;
@@ -36,7 +37,7 @@ import rx.schedulers.Schedulers;
  * @author lsxiao
  *         date 2015-11-03 23:43
  */
-public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener, BaseSliderView.OnSliderClickListener {
     public static final int SPAN_COUNT = 1;//列数
 
     NewsListAdapter mNewsListAdapter;
@@ -88,7 +89,7 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
 
         //初始化并绑定适配器
         mNewsListAdapter = new NewsListAdapter(getActivity(), new ArrayList<TodayNews.Story>(), new ArrayList<TodayNews.Story>(),
-                this);
+                this, this);
         mRcvNewsList.setAdapter(mNewsListAdapter);
 
         //设置ItemView的divider
@@ -116,10 +117,10 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
         //先获取缓存里面的数据
         Observable<TodayNews> source = Observable
                 .concat(cache, network)
+                //依次遍历序列中的数据源,返回第一个符合条件的数据源
                 .first(new Func1<TodayNews, Boolean>() {
                     @Override
                     public Boolean call(TodayNews todayNews) {
-                        //如果本地数据存在的话
                         return todayNews != null;
                     }
                 });
@@ -166,7 +167,10 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
                         hideProgress();
                         Toast.makeText(getActivity(), getString(R.string.load_fail), Toast.LENGTH_SHORT).show();
                         mTvLoadEmpty.setVisibility(View.GONE);
-                        mTvLoadError.setVisibility(View.VISIBLE);
+                        //没有缓存数据，才显示error icon
+                        if (mNewsListAdapter.getStories().isEmpty()) {
+                            mTvLoadError.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
     }
@@ -202,5 +206,13 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
                 mSrlNewsList.setRefreshing(false);
             }
         });
+    }
+
+    @Override
+    public void onSliderClick(BaseSliderView slider) {
+        TodayNews.Story story = (TodayNews.Story) slider.getBundle().getSerializable(BundleKey.STORY);
+        if (story != null) {
+            NewsDetailActivity.start(getActivity(), story);
+        }
     }
 }
