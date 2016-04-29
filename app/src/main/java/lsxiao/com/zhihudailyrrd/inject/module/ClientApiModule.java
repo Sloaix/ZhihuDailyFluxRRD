@@ -61,8 +61,9 @@ public class ClientApiModule {
     @Provides
     @Singleton
     public OkHttpClient provideClient(HttpLoggingInterceptor loggingInterceptor) {
-        OkHttpClient client = new OkHttpClient();
-//        client.interceptors().add(loggingInterceptor);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
+                .build();
         return client;
     }
 }
