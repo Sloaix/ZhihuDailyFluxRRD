@@ -20,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * @date 2015-11-03 23:28
  */
 @Module
-public class ClientApiModule {
+public class ClientAPIModule {
     private static final String API_VERSION = "4";
     private static final String BASE_URL = "http://news-at.zhihu.com/api/4/";
 
@@ -38,7 +38,7 @@ public class ClientApiModule {
 
     @Provides
     @Singleton
-    public HttpLoggingInterceptor providerLog() {
+    public HttpLoggingInterceptor provideLogger() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         return interceptor;

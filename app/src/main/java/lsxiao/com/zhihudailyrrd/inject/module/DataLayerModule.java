@@ -12,11 +12,18 @@ import lsxiao.com.zhihudailyrrd.service.impl.DailyManager;
  * @date 2015-11-04 00:44
  */
 @Module
-public class AppLayerModule {
+public class DataLayerModule {
 
     @Singleton
     @Provides
-    public DataLayer provideDataLayer() {
-        return new DataLayer(new DailyManager());
+    public DailyManager provideDailyManager() {
+        return new DailyManager();
     }
+
+    @Singleton
+    @Provides
+    public DataLayer provideDataLayer(DailyManager dailyManager) {
+        return new DataLayer(dailyManager);
+    }
+
 }

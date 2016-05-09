@@ -1,13 +1,10 @@
 package lsxiao.com.zhihudailyrrd;
 
 import android.app.Application;
-import android.preference.PreferenceManager;
 
-import lsxiao.com.zhihudailyrrd.inject.component.AppLayerComponent;
-import lsxiao.com.zhihudailyrrd.inject.component.DaggerAppLayerComponent;
-import lsxiao.com.zhihudailyrrd.service.impl.DataLayerManager;
-import lsxiao.com.zhihudailyrrd.util.AppContextUtil;
-import lsxiao.com.zhihudailyrrd.util.SpUtil;
+import lsxiao.com.zhihudailyrrd.inject.component.ApplicationComponent;
+import lsxiao.com.zhihudailyrrd.inject.component.DaggerApplicationComponent;
+import lsxiao.com.zhihudailyrrd.inject.module.ApplicationModule;
 
 /**
  * @author lsxiao
@@ -17,10 +14,14 @@ public class DailyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        AppContextUtil.init(this);
-        SpUtil.init(PreferenceManager.getDefaultSharedPreferences(this));
-        DataLayerManager.init();
-        AppLayerComponent.Instance.init(DaggerAppLayerComponent.builder().build());
+        initDagger();
+    }
+
+    private void initDagger() {
+        ApplicationComponent.Instance.init(DaggerApplicationComponent
+                .builder()
+                .applicationModule(new ApplicationModule(this))
+                .build());
     }
 
     @Override
