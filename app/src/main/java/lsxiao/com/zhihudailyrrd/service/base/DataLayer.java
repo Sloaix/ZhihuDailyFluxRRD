@@ -57,10 +57,9 @@ public class DataLayer {
         /**
          * 获取本地今日热文
          *
-         * @param date string
          * @return TodayNews
          */
-        Observable<TodayNews> getLocalTodayNews(final String date);
+        Observable<TodayNews> getLatestTodayNews();
 
 
         /**

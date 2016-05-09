@@ -9,12 +9,8 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.trello.rxlifecycle.FragmentEvent;
-
-import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 
@@ -23,15 +19,14 @@ import lsxiao.com.zhihudailyrrd.R;
 import lsxiao.com.zhihudailyrrd.base.BaseFragment;
 import lsxiao.com.zhihudailyrrd.base.BundleKey;
 import lsxiao.com.zhihudailyrrd.base.DividerItemDecoration;
+import lsxiao.com.zhihudailyrrd.flux.action.NewsAction;
+import lsxiao.com.zhihudailyrrd.flux.store.NewsListStore;
+import lsxiao.com.zhihudailyrrd.flux.store.base.BaseStore;
 import lsxiao.com.zhihudailyrrd.model.TodayNews;
 import lsxiao.com.zhihudailyrrd.ui.Activity.NewsDetailActivity;
 import lsxiao.com.zhihudailyrrd.ui.Adapter.NewsListAdapter;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
+import lsxiao.com.zhihudailyrrd.util.RxBus;
 import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * @author lsxiao
@@ -52,10 +47,7 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
     @Bind(R.id.tv_load_error)
     TextView mTvLoadError;
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
+    NewsListStore mNewsListStore;
 
     @Override
     protected int getLayoutId() {
@@ -64,10 +56,30 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
+        if (null != savedInstanceState) {
+            mNewsListStore = (NewsListStore) savedInstanceState.getSerializable(BundleKey.NEWS_LIST_STORE);
+        } else if (mNewsListStore == null) {
+            mNewsListStore = new NewsListStore();
+        }
         init();
-        loadData();
+        onChange();
+        dispatchDataFetch();
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(BundleKey.NEWS_LIST_STORE, mNewsListStore);
+    }
+
+    @Override
+    protected BaseStore getStore() {
+        if (mNewsListStore == null) {
+            mNewsListStore = new NewsListStore();
+        }
+        return mNewsListStore;
+    }
 
     public static Fragment newInstance() {
         return new NewsListFragment();
@@ -77,6 +89,9 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
         mToolbar.setTitle(getString(R.string.today_news));
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(mToolbar);
+
+        mTvLoadError.setOnClickListener(this);
+
         //为下拉刷新组件绑定监听器
         mSrlNewsList.setOnRefreshListener(this);
 
@@ -97,122 +112,99 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
                 DividerItemDecoration.VERTICAL_LIST));
     }
 
-    private void loadData() {
-        String nowDateStr = DateTime.now().minusDays(1).toString("yyyyMMdd");
-        //缓存数据源
-        Observable<TodayNews> cache = getDataLayer().getDailyService().getLocalTodayNews(nowDateStr);
 
-        //服务端数据源
-        Observable<TodayNews> network = getDataLayer().getDailyService().getTodayNews();
-
-        //输出前缓存一下
-        network = network.doOnNext(new Action1<TodayNews>() {
-            @Override
-            public void call(TodayNews todayNews) {
-                getDataLayer().getDailyService().cacheTodayNews(todayNews);
-            }
-        });
-
-
-        //先获取缓存里面的数据
-        Observable<TodayNews> source = Observable
-                .concat(cache, network)
-                //依次遍历序列中的数据源,返回第一个符合条件的数据源
-                .first(new Func1<TodayNews, Boolean>() {
+    private void onChange() {
+        getSubscription().add(RxBus.instance().toObservable(NewsListStore.FetchChangeEvent.class)
+                .subscribe(new Action1<NewsListStore.FetchChangeEvent>() {
                     @Override
-                    public Boolean call(TodayNews todayNews) {
-                        return todayNews != null;
+                    public void call(NewsListStore.FetchChangeEvent fetchChangeEvent) {
+                        render();
                     }
-                });
+                }));
 
-        source.compose(this.<TodayNews>bindUntilEvent(FragmentEvent.PAUSE))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(new Action0() {
+        getSubscription().add(RxBus.instance().toObservable(NewsListStore.ItemClickChangeEvent.class)
+                .subscribe(new Action1<NewsListStore.ItemClickChangeEvent>() {
                     @Override
-                    public void call() {
-                        showProgress();
-                    }
-                })
-                .doOnUnsubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        //解除订阅关系后停止刷新
-                        hideProgress();
-                        if (mNewsListAdapter.getStories().isEmpty()) {
-                            mTvLoadEmpty.setVisibility(View.GONE);
-                            mTvLoadError.setVisibility(View.VISIBLE);
+                    public void call(NewsListStore.ItemClickChangeEvent itemClickChangeEvent) {
+                        if (null == itemClickChangeEvent) {
+                            return;
                         }
+                        TodayNews.Story story = mNewsListAdapter.getItemData(itemClickChangeEvent.position);
+                        NewsDetailActivity.start(getActivity(), story);
                     }
-                })
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<TodayNews>() {
+                }));
+
+        getSubscription().add(RxBus.instance().toObservable(NewsListStore.SliderClickChangeEvent.class)
+                .subscribe(new Action1<NewsListStore.SliderClickChangeEvent>() {
                     @Override
-                    public void call(TodayNews todayNews) {
-                        hideProgress();
-                        if (todayNews.getStories() == null) {
-                            mTvLoadEmpty.setVisibility(View.VISIBLE);
-                        } else {
-                            mNewsListAdapter.setStories(todayNews.getStories(), todayNews.getTopStories());
-                            mNewsListAdapter.notifyDataSetChanged();
-                            mTvLoadEmpty.setVisibility(View.GONE);
+                    public void call(NewsListStore.SliderClickChangeEvent sliderClickChangeEvent) {
+                        if (null == sliderClickChangeEvent) {
+                            return;
                         }
-                        mTvLoadError.setVisibility(View.GONE);
+                        NewsDetailActivity.start(getActivity(), sliderClickChangeEvent.story);
                     }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        throwable.printStackTrace();
-                        //停止显示刷新动画
-                        hideProgress();
-                        Toast.makeText(getActivity(), getString(R.string.load_fail), Toast.LENGTH_SHORT).show();
-                        mTvLoadEmpty.setVisibility(View.GONE);
-                        //没有缓存数据，才显示error icon
-                        if (mNewsListAdapter.getStories().isEmpty()) {
-                            mTvLoadError.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
+                }));
+
+    }
+
+    /**
+     * 渲染UI
+     */
+    @SuppressWarnings("ResourceType")
+    private void render() {
+        mSrlNewsList.setRefreshing(mNewsListStore.isShowLoadView());
+        mTvLoadEmpty.setVisibility(mNewsListStore.getEmptyViewVis());
+        mTvLoadError.setVisibility(mNewsListStore.getErrorViewVis());
+        if (!mNewsListStore.isEmpty() && mNewsListStore.isFinish()) {
+            TodayNews todayNews = mNewsListStore.getTodayNews();
+            mNewsListAdapter.setStories(todayNews.getStories(), todayNews.getTopStories());
+            mNewsListAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void onRefresh() {
-        loadData();
+        dispatchDataFetch();
+    }
+
+    private void dispatchDataFetch() {
+        getActionCreatorManager().getNewsActionCreator().fetchListNews();
+    }
+
+    private void dispatchItemClick(int position) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(BundleKey.POSITION, position);
+        getDispatcher().dispatch(new NewsAction(NewsAction.ACTION_NEWS_ITEM_LIST_CLICK, bundle));
+    }
+
+    private void dispatchSliderClick(TodayNews.Story story) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(BundleKey.STORY, story);
+        getDispatcher().dispatch(new NewsAction(NewsAction.ACTION_NEWS_SLIDER_LIST_CLICK, bundle));
     }
 
     @Override
     public void onClick(View v) {
-        final int position = mRcvNewsList.getChildAdapterPosition(v);
-        if (RecyclerView.NO_POSITION != position) {
-            TodayNews.Story story = mNewsListAdapter.getItemData(position);
-            NewsDetailActivity.start(getActivity(), story);
+        final int id = v.getId();
+        switch (id) {
+            case R.id.tv_load_error: {
+                dispatchDataFetch();
+                break;
+            }
+            default: {
+                final int position = mRcvNewsList.getChildAdapterPosition(v);
+                if (RecyclerView.NO_POSITION != position) {
+                    dispatchItemClick(position);
+                }
+            }
         }
-    }
-
-    public void showProgress() {
-        mSrlNewsList.post(new Runnable() {
-            @Override
-            public void run() {
-                //刷新动画
-                mSrlNewsList.setRefreshing(true);
-            }
-        });
-    }
-
-    public void hideProgress() {
-        mSrlNewsList.post(new Runnable() {
-            @Override
-            public void run() {
-                mSrlNewsList.setRefreshing(false);
-            }
-        });
     }
 
     @Override
     public void onSliderClick(BaseSliderView slider) {
         TodayNews.Story story = (TodayNews.Story) slider.getBundle().getSerializable(BundleKey.STORY);
         if (story != null) {
-            NewsDetailActivity.start(getActivity(), story);
+            dispatchSliderClick(story);
         }
     }
 }

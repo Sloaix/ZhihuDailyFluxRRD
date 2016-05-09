@@ -12,11 +12,11 @@ import lsxiao.com.zhihudailyrrd.flux.store.base.BaseStore;
  * date 2016-05-09 17:28
  */
 public class Dispatcher {
-    private List<BaseStore> mBaseStoreList;
+    private List<BaseStore> mStoreList;
     private static Dispatcher sInstance;
 
     private Dispatcher() {
-        mBaseStoreList = new ArrayList<>();
+        mStoreList = new ArrayList<>();
     }
 
 
@@ -41,7 +41,7 @@ public class Dispatcher {
         if (null == store) {
             throw new IllegalArgumentException("the store can't be null");
         }
-        mBaseStoreList.add(store);
+        mStoreList.add(store);
     }
 
     /**
@@ -53,7 +53,7 @@ public class Dispatcher {
         if (null == stores || stores.length == 0) {
             throw new IllegalArgumentException("the store array is null or empty");
         }
-        mBaseStoreList.addAll(Arrays.asList(stores));
+        register(Arrays.asList(stores));
     }
 
     /**
@@ -65,7 +65,7 @@ public class Dispatcher {
         if (null == stores || stores.isEmpty()) {
             throw new IllegalArgumentException("the store list is null or empty");
         }
-        register((BaseStore[]) stores.toArray());
+        mStoreList.addAll(stores);
     }
 
     /**
@@ -77,7 +77,7 @@ public class Dispatcher {
         if (null == store) {
             throw new IllegalArgumentException("the store can't be null");
         }
-        mBaseStoreList.remove(store);
+        mStoreList.remove(store);
     }
 
     /**
@@ -89,7 +89,7 @@ public class Dispatcher {
         if (null == stores || stores.length == 0) {
             throw new IllegalArgumentException("the store array is null or empty");
         }
-        mBaseStoreList.removeAll(Arrays.asList(stores));
+        unregister(Arrays.asList(stores));
     }
 
     /**
@@ -101,7 +101,7 @@ public class Dispatcher {
         if (null == stores || stores.isEmpty()) {
             throw new IllegalArgumentException("the store list is null or empty");
         }
-        unregister((BaseStore[]) stores.toArray());
+        mStoreList.removeAll(stores);
     }
 
     /**
@@ -115,7 +115,7 @@ public class Dispatcher {
             throw new IllegalArgumentException("the action and store can't be null");
         }
 
-        if (!mBaseStoreList.contains(store)) {
+        if (!mStoreList.contains(store)) {
             throw new IllegalArgumentException("the store can't be find,you must register the store to dispatcher first");
         }
 
@@ -141,7 +141,7 @@ public class Dispatcher {
      * @param action BaseAction
      */
     private void performTraversals(BaseAction action) {
-        for (BaseStore store : mBaseStoreList) {
+        for (BaseStore store : mStoreList) {
             store.onAction(action);
         }
     }

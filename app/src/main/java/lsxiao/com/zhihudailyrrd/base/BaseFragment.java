@@ -11,10 +11,11 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import lsxiao.com.zhihudailyrrd.flux.action.creator.ActionCreatorLayer;
+import lsxiao.com.zhihudailyrrd.flux.action.creator.ActionCreatorManager;
 import lsxiao.com.zhihudailyrrd.flux.dispatcher.Dispatcher;
+import lsxiao.com.zhihudailyrrd.flux.store.base.BaseStore;
 import lsxiao.com.zhihudailyrrd.inject.component.ApplicationComponent;
-import lsxiao.com.zhihudailyrrd.service.base.DataLayer;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * @author lsxiao
@@ -24,11 +25,11 @@ public abstract class BaseFragment extends RxFragment {
     public static final String TAG = BaseFragment.class.getSimpleName();
     protected View mRootView;
     @Inject
-    DataLayer mDataLayer;
-    @Inject
     Dispatcher mDispatcher;
-    //    @Inject
-    ActionCreatorLayer mActionCreatorLayer;
+    @Inject
+    ActionCreatorManager mActionCreatorManager;
+
+    private CompositeSubscription mSubscription;
 
     public BaseFragment() {
         ApplicationComponent.Instance.get().inject(this);
@@ -44,7 +45,9 @@ public abstract class BaseFragment extends RxFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mSubscription = new CompositeSubscription();
         ButterKnife.bind(this, view);
+        getDispatcher().register(getStore());//订阅Action
         afterCreate(savedInstanceState);
     }
 
@@ -52,21 +55,29 @@ public abstract class BaseFragment extends RxFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        //取消订阅Action
+        getDispatcher().unregister(getStore());
+        //取消订阅StoreChangeEvent
+        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
     }
 
-    public DataLayer getDataLayer() {
-        return mDataLayer;
+    public CompositeSubscription getSubscription() {
+        return mSubscription;
     }
 
     public Dispatcher getDispatcher() {
         return mDispatcher;
     }
 
-    public ActionCreatorLayer getActionCreatorLayer() {
-        return mActionCreatorLayer;
+    public ActionCreatorManager getActionCreatorManager() {
+        return mActionCreatorManager;
     }
 
     protected abstract int getLayoutId();
+
+    protected abstract BaseStore getStore();
 
     protected abstract void afterCreate(Bundle savedInstanceState);
 

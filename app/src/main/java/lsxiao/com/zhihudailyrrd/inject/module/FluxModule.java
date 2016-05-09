@@ -4,7 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import lsxiao.com.zhihudailyrrd.flux.action.creator.ActionCreatorLayer;
+import lsxiao.com.zhihudailyrrd.flux.action.creator.ActionCreatorManager;
 import lsxiao.com.zhihudailyrrd.flux.action.creator.NewsActionCreator;
 import lsxiao.com.zhihudailyrrd.flux.dispatcher.Dispatcher;
 import lsxiao.com.zhihudailyrrd.service.base.DataLayer;
@@ -32,8 +32,8 @@ public class FluxModule {
 
     @Singleton
     @Provides
-    public ActionCreatorLayer provideActionCreatorLayer(NewsActionCreator newsActionCreator) {
-        return new ActionCreatorLayer(newsActionCreator);
+    public ActionCreatorManager provideActionCreatorLayer(NewsActionCreator newsActionCreator) {
+        return new ActionCreatorManager(newsActionCreator);
     }
 
 }

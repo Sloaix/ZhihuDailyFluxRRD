@@ -2,11 +2,13 @@ package lsxiao.com.zhihudailyrrd.flux.action.base;
 
 import android.os.Bundle;
 
+import java.io.Serializable;
+
 /**
  * author lsxiao
  * date 2016-05-09 17:29
  */
-public abstract class BaseAction {
+public abstract class BaseAction implements Serializable {
     private final String type;
     private final Bundle data;
 

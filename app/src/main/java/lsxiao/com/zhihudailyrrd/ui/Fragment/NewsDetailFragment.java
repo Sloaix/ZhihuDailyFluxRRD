@@ -8,6 +8,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -15,29 +16,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.trello.rxlifecycle.FragmentEvent;
-
-import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import lsxiao.com.zhihudailyrrd.R;
 import lsxiao.com.zhihudailyrrd.base.BaseFragment;
 import lsxiao.com.zhihudailyrrd.base.BundleKey;
+import lsxiao.com.zhihudailyrrd.flux.store.NewsDetailStore;
+import lsxiao.com.zhihudailyrrd.flux.store.base.BaseStore;
 import lsxiao.com.zhihudailyrrd.model.News;
 import lsxiao.com.zhihudailyrrd.model.TodayNews;
 import lsxiao.com.zhihudailyrrd.util.HtmlUtil;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
+import lsxiao.com.zhihudailyrrd.util.RxBus;
 import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * @author lsxiao
  *         date 2015-11-05 10:27
  */
-public class NewsDetailFragment extends BaseFragment {
+public class NewsDetailFragment extends BaseFragment implements View.OnClickListener {
     @Bind(R.id.wv_news)
     WebView mWvNews;
     @Bind(R.id.cpb_loading)
@@ -58,6 +54,7 @@ public class NewsDetailFragment extends BaseFragment {
     TextView mTvLoadError;
     private TodayNews.Story mStory;
     private News mNews;
+    private NewsDetailStore mNewsDetailStore;
 
     @Override
     protected int getLayoutId() {
@@ -75,8 +72,14 @@ public class NewsDetailFragment extends BaseFragment {
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         mStory = (TodayNews.Story) getArguments().getSerializable(BundleKey.STORY);
+        if (null != savedInstanceState) {
+            mNewsDetailStore = (NewsDetailStore) savedInstanceState.getSerializable(BundleKey.NEWS_DETAIL_STORE);
+        } else if (mNewsDetailStore == null) {
+            mNewsDetailStore = new NewsDetailStore();
+        }
         init();
-        loadData();
+        onChange();
+        dispatchDataFetch();
     }
 
     private void init() {
@@ -86,7 +89,7 @@ public class NewsDetailFragment extends BaseFragment {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
+        mTvLoadError.setOnClickListener(this);
         setHasOptionsMenu(true);
         mNestedScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mNestedScrollView.setElevation(0);
@@ -101,104 +104,61 @@ public class NewsDetailFragment extends BaseFragment {
         mCollapsingToolbarLayout.setTitle(getString(R.string.app_name));
     }
 
-    /**
-     * 显示Loading
-     */
-    private void showLoading() {
-        mCpbLoading.setVisibility(View.VISIBLE);
+    private void onChange() {
+        getSubscription().add(RxBus.instance().toObservable(NewsDetailStore.FetchChangeEvent.class)
+                .subscribe(new Action1<NewsDetailStore.FetchChangeEvent>() {
+                    @Override
+                    public void call(NewsDetailStore.FetchChangeEvent fetchChangeEvent) {
+                        render();
+                    }
+                }));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(BundleKey.NEWS_DETAIL_STORE, mNewsDetailStore);
     }
 
     /**
-     * 隐藏Loading
+     * 渲染UI
      */
-    private void hideLoading() {
-        mCpbLoading.setVisibility(View.GONE);
+    @SuppressWarnings("ResourceType")
+    private void render() {
+        mTvLoadEmpty.setVisibility(mNewsDetailStore.getEmptyViewVis());
+        mTvLoadError.setVisibility(mNewsDetailStore.getErrorViewVis());
+        Log.d("xls", mNewsDetailStore.isShowLoadView() + "");
+        mCpbLoading.setVisibility(mNewsDetailStore.isShowLoadView() ? View.VISIBLE : View.GONE);
+        if (!mNewsDetailStore.isEmpty() && mNewsDetailStore.isFinish()) {
+            News news = mNewsDetailStore.getData();
+            Picasso.with(getActivity()).load(news.getImage()).into(mImageView);
+            mTvSource.setText(news.getImageSource());
+            String htmlData = HtmlUtil.createHtmlData(news);
+            mWvNews.loadData(htmlData, HtmlUtil.MIME_TYPE, HtmlUtil.ENCODING);
+        }
     }
 
-    private void loadData() {
-        //服务端数据源
-        Observable<News> network = getDataLayer().getDailyService().getNews(mStory.getId());
-
-        //缓存数据源
-        Observable<News> cache = getDataLayer().getDailyService().getLocalNews(String.valueOf(mStory.getId()));
-
-
-        //输出数据前缓存到本地
-        network = network.doOnNext(new Action1<News>() {
-            @Override
-            public void call(News news) {
-                getDataLayer().getDailyService().cacheNews(news);
-            }
-        });
-
-        //默认先从本地取数据
-        Observable<News> source = Observable.concat(cache, network).first(new Func1<News, Boolean>() {
-            @Override
-            public Boolean call(News news) {
-                //如果本地数据存在的话
-                return news != null;
-            }
-        });
-
-
-        source.compose(this.<News>bindUntilEvent(FragmentEvent.PAUSE))//当PAUSE时，不再发出事件
-                .delay(1, TimeUnit.SECONDS)//延迟一秒显示，让loading过渡更自然
-                .doOnNext(new Action1<News>() {
-                    @Override
-                    public void call(News news) {
-                        if (news != null) {
-                            getDataLayer().getDailyService().cacheNews(news);
-                        }
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnUnsubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        //解除订阅关系后停隐藏刷新progress
-                        hideLoading();
-                        if (null == mNews) {
-                            mTvLoadEmpty.setVisibility(View.GONE);
-                            mTvLoadError.setVisibility(View.VISIBLE);
-                        }
-                    }
-                })
-                .doOnSubscribe(new Action0() {
-                    @Override
-                    public void call() {
-                        showLoading();
-                    }
-                })
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<News>() {
-                    @Override
-                    public void call(News news) {
-                        //隐藏progress
-                        hideLoading();
-                        mNews = news;
-                        if (mNews == null) {
-                            mTvLoadEmpty.setVisibility(View.VISIBLE);
-                        } else {
-                            Picasso.with(getActivity())
-                                    .load(news.getImage())
-                                    .into(mImageView);
-                            mTvSource.setText(news.getImageSource());
-
-                            String htmlData = HtmlUtil.createHtmlData(news);
-                            mWvNews.loadData(htmlData, HtmlUtil.MIME_TYPE, HtmlUtil.ENCODING);
-                            mTvLoadEmpty.setVisibility(View.GONE);
-                        }
-                        mTvLoadError.setVisibility(View.GONE);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        throwable.printStackTrace();
-                        //隐藏progress
-                        hideLoading();
-                    }
-                });
+    private void dispatchDataFetch() {
+        getActionCreatorManager().getNewsActionCreator().fetchDetailNews(mStory);
     }
 
+    @Override
+    protected BaseStore getStore() {
+        if (mNewsDetailStore == null) {
+            mNewsDetailStore = new NewsDetailStore();
+        }
+        return mNewsDetailStore;
+    }
+
+    @Override
+    public void onClick(View v) {
+        final int id = v.getId();
+        switch (id) {
+            case R.id.tv_load_error: {
+                dispatchDataFetch();
+                break;
+            }
+            default:
+        }
+    }
 }

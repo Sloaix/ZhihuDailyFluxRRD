@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import lsxiao.com.zhihudailyrrd.flux.action.creator.ActionCreatorLayer;
+import lsxiao.com.zhihudailyrrd.flux.action.creator.ActionCreatorManager;
 import lsxiao.com.zhihudailyrrd.flux.dispatcher.Dispatcher;
 import lsxiao.com.zhihudailyrrd.inject.component.ApplicationComponent;
 import lsxiao.com.zhihudailyrrd.service.base.DataLayer;
@@ -28,7 +28,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
     @Inject
     Dispatcher mDispatcher;
     //    @Inject
-    ActionCreatorLayer mActionCreatorLayer;
+    ActionCreatorManager mActionCreatorManager;
 
 
     public BaseDialogFragment() {
@@ -57,8 +57,8 @@ public abstract class BaseDialogFragment extends DialogFragment {
         return mDispatcher;
     }
 
-    public ActionCreatorLayer getActionCreatorLayer() {
-        return mActionCreatorLayer;
+    public ActionCreatorManager getActionCreatorManager() {
+        return mActionCreatorManager;
     }
 
     @Override
