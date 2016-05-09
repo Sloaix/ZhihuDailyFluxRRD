@@ -12,7 +12,7 @@ minSdkVersion 21
 
 ![](https://github.com/lsxiao/ZhihuDailyRRD/blob/master/screenshot/structure.jpg?raw=true)
 
-
+## FLUX单向数据流
 ![](https://github.com/lsxiao/ZhihuDailyRRD/blob/master/screenshot/flux_flow.png?raw=true)
 
 ## 截图
