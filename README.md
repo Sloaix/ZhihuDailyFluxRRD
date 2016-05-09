@@ -1,5 +1,5 @@
 # 知乎日报(ZhiHuDaily)
-##Flux RRD(Retrofit,RxJava,Dagger2)
+Flux RRD(Retrofit,RxJava,Dagger2)
 ------
 ### Description
 
