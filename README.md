@@ -1,6 +1,6 @@
-# 知乎日报 Flux RRD(Retrofit,RxJava,Dagger2)
+# 知乎日报(ZhiHuDaily) Flux RRD(Retrofit,RxJava,Dagger2)
 ------
-### 简介
+### Description
 
 This Demo is created by RRD(Retrofit,RxJava,Dagger2) and based on flux structure.
 
