@@ -1,7 +1,6 @@
 package lsxiao.com.zhihudailyrrd.flux.store;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import java.io.Serializable;
 
@@ -27,7 +26,6 @@ public class NewsDetailStore extends BaseStore {
 
     @Override
     public void onAction(BaseAction action) {
-        Log.d("xls", "onAction");
         switch (action.getType()) {
             case NewsAction.ACTION_DETAIL_NEWS_FETCH_START: {
                 mFetchStatus = FetchStatus.LOADING;

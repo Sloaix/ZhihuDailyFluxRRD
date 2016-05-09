@@ -8,7 +8,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -127,7 +126,6 @@ public class NewsDetailFragment extends BaseFragment implements View.OnClickList
     private void render() {
         mTvLoadEmpty.setVisibility(mNewsDetailStore.getEmptyViewVis());
         mTvLoadError.setVisibility(mNewsDetailStore.getErrorViewVis());
-        Log.d("xls", mNewsDetailStore.isShowLoadView() + "");
         mCpbLoading.setVisibility(mNewsDetailStore.isShowLoadView() ? View.VISIBLE : View.GONE);
         if (!mNewsDetailStore.isEmpty() && mNewsDetailStore.isFinish()) {
             News news = mNewsDetailStore.getData();
