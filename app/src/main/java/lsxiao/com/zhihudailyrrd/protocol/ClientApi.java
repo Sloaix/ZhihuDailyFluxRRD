@@ -11,7 +11,7 @@ import rx.Observable;
  * @author lsxiao
  * @date 2015-11-03 22:28
  */
-public interface ClientApi {
+public interface ClientAPI {
 
     /**
      * FIELD

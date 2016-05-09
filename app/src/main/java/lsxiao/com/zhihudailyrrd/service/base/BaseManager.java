@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import javax.inject.Inject;
 
 import lsxiao.com.zhihudailyrrd.inject.component.ApplicationComponent;
-import lsxiao.com.zhihudailyrrd.protocol.ClientApi;
+import lsxiao.com.zhihudailyrrd.protocol.ClientAPI;
 
 /**
  * @author lsxiao
@@ -14,7 +14,7 @@ import lsxiao.com.zhihudailyrrd.protocol.ClientApi;
  */
 public abstract class BaseManager {
     @Inject
-    ClientApi mApi;
+    ClientAPI mApi;
     @Inject
     Gson mGson;
 
@@ -22,7 +22,7 @@ public abstract class BaseManager {
         ApplicationComponent.Instance.get().inject(this);
     }
 
-    public ClientApi getApi() {
+    public ClientAPI getApi() {
         return mApi;
     }
 

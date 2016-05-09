@@ -1,16 +1,16 @@
-# 知乎日报 RRD(Retrofit,RxJava,Dagger2)
+# 知乎日报 Flux RRD(Retrofit,RxJava,Dagger2)
 ------
 ## 简介
 
-This simple example is created by RRD(Retrofit,RxJava,Dagger2).
+This Demo is created by RRD(Retrofit,RxJava,Dagger2) and based on flux structure.
 
-这是一个使用Retrofit RxJava Dagger2创建的简单示例。
+这是一个基于Flux架构,使用Retrofit RxJava Dagger2创建的示例。
 
 minSdkVersion 21
 
 ##项目结构
 
-![](https://github.com/lsxiao/ZhihuDailyRRD/blob/master/screenshot/structure.png?raw=true)
+![](https://github.com/lsxiao/ZhihuDailyRRD/blob/master/screenshot/structure.jpg?raw=true)
 
 
 ## 截图

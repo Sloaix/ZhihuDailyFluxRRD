@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import lsxiao.com.zhihudailyrrd.protocol.ClientApi;
+import lsxiao.com.zhihudailyrrd.protocol.ClientAPI;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Converter;
@@ -26,14 +26,14 @@ public class ClientAPIModule {
 
     @Provides
     @Singleton
-    public ClientApi provideClientApi(OkHttpClient client, Converter.Factory converterFactory) {
+    public ClientAPI provideClientApi(OkHttpClient client, Converter.Factory converterFactory) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(converterFactory)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(client)
                 .build();
-        return retrofit.create(ClientApi.class);
+        return retrofit.create(ClientAPI.class);
     }
 
     @Provides
