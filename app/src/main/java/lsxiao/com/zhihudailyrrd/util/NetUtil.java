@@ -14,8 +14,8 @@ public class NetUtil {
     }
 
     public static boolean isNetworkConnected() {
-        if (AppContextUtil.getInstance() != null) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) AppContextUtil.getInstance()
+        if (AppContextUtil.instance() != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) AppContextUtil.instance()
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
             if (mNetworkInfo != null) {
@@ -26,8 +26,8 @@ public class NetUtil {
     }
 
     public static boolean isWifiConnected() {
-        if (AppContextUtil.getInstance() != null) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) AppContextUtil.getInstance()
+        if (AppContextUtil.instance() != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) AppContextUtil.instance()
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mWiFiNetworkInfo = mConnectivityManager
                     .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
@@ -39,8 +39,8 @@ public class NetUtil {
     }
 
     public static boolean isMobileConnected() {
-        if (AppContextUtil.getInstance() != null) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) AppContextUtil.getInstance()
+        if (AppContextUtil.instance() != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) AppContextUtil.instance()
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mMobileNetworkInfo = mConnectivityManager
                     .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
@@ -52,8 +52,8 @@ public class NetUtil {
     }
 
     public static int getConnectedType() {
-        if (AppContextUtil.getInstance() != null) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) AppContextUtil.getInstance()
+        if (AppContextUtil.instance() != null) {
+            ConnectivityManager mConnectivityManager = (ConnectivityManager) AppContextUtil.instance()
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
             if (mNetworkInfo != null && mNetworkInfo.isAvailable()) {

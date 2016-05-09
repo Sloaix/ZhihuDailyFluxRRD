@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import lsxiao.com.zhihudailyrrd.inject.component.AppLayerComponent;
+import lsxiao.com.zhihudailyrrd.flux.action.creator.ActionCreatorLayer;
+import lsxiao.com.zhihudailyrrd.flux.dispatcher.Dispatcher;
+import lsxiao.com.zhihudailyrrd.inject.component.ApplicationComponent;
 import lsxiao.com.zhihudailyrrd.service.DataLayer;
 
 /**
@@ -19,12 +21,19 @@ import lsxiao.com.zhihudailyrrd.service.DataLayer;
  */
 public abstract class BaseDialogFragment extends DialogFragment {
     public static final String TAG = BaseDialogFragment.TAG;
-    @Inject
-    DataLayer mDataLayer;
     protected View mRootView;
 
+    @Inject
+    DataLayer mDataLayer;
+    @Inject
+    Dispatcher mDispatcher;
+//    @Inject
+    ActionCreatorLayer mActionCreatorLayer;
+
+
+
     public BaseDialogFragment() {
-        AppLayerComponent.Instance.get().inject(this);
+        ApplicationComponent.Instance.get().inject(this);
     }
 
     @Nullable
@@ -45,11 +54,20 @@ public abstract class BaseDialogFragment extends DialogFragment {
         return mDataLayer;
     }
 
+    public Dispatcher getDispatcher() {
+        return mDispatcher;
+    }
+
+    public ActionCreatorLayer getActionCreatorLayer() {
+        return mActionCreatorLayer;
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
+
 
     protected abstract int getLayoutId();
 

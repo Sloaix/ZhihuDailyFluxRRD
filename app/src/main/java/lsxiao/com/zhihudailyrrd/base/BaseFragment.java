@@ -11,7 +11,9 @@ import com.trello.rxlifecycle.components.support.RxFragment;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import lsxiao.com.zhihudailyrrd.inject.component.AppLayerComponent;
+import lsxiao.com.zhihudailyrrd.flux.action.creator.ActionCreatorLayer;
+import lsxiao.com.zhihudailyrrd.flux.dispatcher.Dispatcher;
+import lsxiao.com.zhihudailyrrd.inject.component.ApplicationComponent;
 import lsxiao.com.zhihudailyrrd.service.DataLayer;
 
 /**
@@ -23,9 +25,13 @@ public abstract class BaseFragment extends RxFragment {
     protected View mRootView;
     @Inject
     DataLayer mDataLayer;
+    @Inject
+    Dispatcher mDispatcher;
+//    @Inject
+    ActionCreatorLayer mActionCreatorLayer;
 
     public BaseFragment() {
-        AppLayerComponent.Instance.get().inject(this);
+        ApplicationComponent.Instance.get().inject(this);
     }
 
     @Nullable
@@ -50,6 +56,14 @@ public abstract class BaseFragment extends RxFragment {
 
     public DataLayer getDataLayer() {
         return mDataLayer;
+    }
+
+    public Dispatcher getDispatcher() {
+        return mDispatcher;
+    }
+
+    public ActionCreatorLayer getActionCreatorLayer() {
+        return mActionCreatorLayer;
     }
 
     protected abstract int getLayoutId();

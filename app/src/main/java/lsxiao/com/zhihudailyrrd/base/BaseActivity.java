@@ -7,7 +7,9 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import lsxiao.com.zhihudailyrrd.inject.component.AppLayerComponent;
+import lsxiao.com.zhihudailyrrd.flux.action.creator.ActionCreatorLayer;
+import lsxiao.com.zhihudailyrrd.flux.dispatcher.Dispatcher;
+import lsxiao.com.zhihudailyrrd.inject.component.ApplicationComponent;
 import lsxiao.com.zhihudailyrrd.service.DataLayer;
 
 /**
@@ -17,13 +19,25 @@ import lsxiao.com.zhihudailyrrd.service.DataLayer;
 public abstract class BaseActivity extends RxAppCompatActivity {
     @Inject
     DataLayer mDataLayer;
+    @Inject
+    Dispatcher mDispatcher;
+    @Inject
+    ActionCreatorLayer mActionCreatorLayer;
 
     public BaseActivity() {
-        AppLayerComponent.Instance.get().inject(this);
+        ApplicationComponent.Instance.get().inject(this);
     }
 
     public DataLayer getDataLayer() {
         return mDataLayer;
+    }
+
+    public ActionCreatorLayer getActionCreatorLayer() {
+        return mActionCreatorLayer;
+    }
+
+    public Dispatcher getDispatcher() {
+        return mDispatcher;
     }
 
     protected abstract int getLayoutId();
