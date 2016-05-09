@@ -66,7 +66,6 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
         dispatchDataFetch();
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -84,6 +83,7 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
     public static Fragment newInstance() {
         return new NewsListFragment();
     }
+
 
     private void init() {
         mToolbar.setTitle(getString(R.string.today_news));
