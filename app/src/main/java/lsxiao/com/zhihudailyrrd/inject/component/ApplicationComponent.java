@@ -10,7 +10,7 @@ import lsxiao.com.zhihudailyrrd.base.BaseActivity;
 import lsxiao.com.zhihudailyrrd.base.BaseDialogFragment;
 import lsxiao.com.zhihudailyrrd.base.BaseFragment;
 import lsxiao.com.zhihudailyrrd.inject.module.ApplicationModule;
-import lsxiao.com.zhihudailyrrd.service.impl.BaseManager;
+import lsxiao.com.zhihudailyrrd.service.base.BaseManager;
 
 /**
  * @author lsxiao

@@ -1,4 +1,4 @@
-package lsxiao.com.zhihudailyrrd.service;
+package lsxiao.com.zhihudailyrrd.service.base;
 
 
 import lsxiao.com.zhihudailyrrd.model.TodayNews;

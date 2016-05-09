@@ -1,17 +1,18 @@
-package lsxiao.com.zhihudailyrrd.service.impl;
+package lsxiao.com.zhihudailyrrd.service;
 
 
 import lsxiao.com.zhihudailyrrd.model.News;
 import lsxiao.com.zhihudailyrrd.model.StartImage;
 import lsxiao.com.zhihudailyrrd.model.TodayNews;
-import lsxiao.com.zhihudailyrrd.service.DataLayer;
+import lsxiao.com.zhihudailyrrd.service.base.DataLayer;
+import lsxiao.com.zhihudailyrrd.service.base.BaseManager;
 import lsxiao.com.zhihudailyrrd.util.SpUtil;
 import rx.Observable;
 import rx.Subscriber;
 
 /**
  * @author lsxiao
- * date 2015-11-03 22:28
+ *         date 2015-11-03 22:28
  */
 public class DailyManager extends BaseManager implements DataLayer.DailyService {
     @Override

@@ -1,4 +1,4 @@
-package lsxiao.com.zhihudailyrrd.service.impl;
+package lsxiao.com.zhihudailyrrd.service.base;
 
 
 import com.google.gson.Gson;
@@ -12,7 +12,7 @@ import lsxiao.com.zhihudailyrrd.protocol.ClientApi;
  * @author lsxiao
  * @date 2015-11-03 22:28
  */
-public class BaseManager {
+public abstract class BaseManager {
     @Inject
     ClientApi mApi;
     @Inject

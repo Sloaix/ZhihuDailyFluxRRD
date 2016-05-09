@@ -10,7 +10,7 @@ import butterknife.ButterKnife;
 import lsxiao.com.zhihudailyrrd.flux.action.creator.ActionCreatorLayer;
 import lsxiao.com.zhihudailyrrd.flux.dispatcher.Dispatcher;
 import lsxiao.com.zhihudailyrrd.inject.component.ApplicationComponent;
-import lsxiao.com.zhihudailyrrd.service.DataLayer;
+import lsxiao.com.zhihudailyrrd.service.base.DataLayer;
 
 /**
  * @author lsxiao

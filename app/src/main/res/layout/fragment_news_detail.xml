@@ -79,13 +79,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="128dp">
+
         <include
             layout="@layout/include_empty"/>
 
         <include
             layout="@layout/include_error"/>
     </FrameLayout>
-
 
 
     <android.support.v4.widget.ContentLoadingProgressBar

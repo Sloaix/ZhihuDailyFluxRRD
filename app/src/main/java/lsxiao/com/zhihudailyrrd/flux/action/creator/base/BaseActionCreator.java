@@ -1,7 +1,7 @@
 package lsxiao.com.zhihudailyrrd.flux.action.creator.base;
 
 import lsxiao.com.zhihudailyrrd.flux.dispatcher.Dispatcher;
-import lsxiao.com.zhihudailyrrd.service.DataLayer;
+import lsxiao.com.zhihudailyrrd.service.base.DataLayer;
 
 /**
  * author lsxiao

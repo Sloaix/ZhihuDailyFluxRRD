@@ -4,8 +4,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import lsxiao.com.zhihudailyrrd.service.DataLayer;
-import lsxiao.com.zhihudailyrrd.service.impl.DailyManager;
+import lsxiao.com.zhihudailyrrd.service.base.DataLayer;
+import lsxiao.com.zhihudailyrrd.service.DailyManager;
 
 /**
  * @author lsxiao

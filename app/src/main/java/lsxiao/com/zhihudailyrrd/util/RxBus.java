@@ -15,6 +15,7 @@ public class RxBus {
 
     private RxBus() {
         //SerializedSubject是线程安全的
+        //PublishSubject 会发送订阅者从订阅之后的事件序列,这意味着没订阅前的事件序列不会被发送到当前订阅者
         this.subject = new SerializedSubject<>(PublishSubject.create());
     }
 
