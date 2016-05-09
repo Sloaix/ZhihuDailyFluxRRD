@@ -13,6 +13,8 @@ minSdkVersion 21
 ![](https://github.com/lsxiao/ZhihuDailyRRD/blob/master/screenshot/structure.jpg?raw=true)
 
 
+![](https://github.com/lsxiao/ZhihuDailyRRD/blob/master/screenshot/flux_flow.png?raw=true)
+
 ## 截图
 
 ![](https://github.com/lsxiao/ZhihuDailyRRD/blob/master/screenshot/Screenshot_20151116-231003.png?raw=true)
