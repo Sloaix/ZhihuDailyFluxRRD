@@ -77,10 +77,13 @@ public class NewsDetailFragment extends BaseFragment implements View.OnClickList
             mNewsDetailStore = new NewsDetailStore();
         }
         init();
-        onChange();
-        dispatchDataFetch();
+        onStoreChange();
+        dispatchFetchDetailNews();
     }
 
+    /**
+     * 初始化
+     */
     private void init() {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(mToolbar);
@@ -88,10 +91,14 @@ public class NewsDetailFragment extends BaseFragment implements View.OnClickList
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
         mTvLoadError.setOnClickListener(this);
+
         setHasOptionsMenu(true);
+
         mNestedScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mNestedScrollView.setElevation(0);
+
         mWvNews.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mWvNews.setElevation(0);
         mWvNews.getSettings().setLoadsImagesAutomatically(true);
@@ -99,12 +106,18 @@ public class NewsDetailFragment extends BaseFragment implements View.OnClickList
         mWvNews.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         // 开启 DOM storage API 功能
         mWvNews.getSettings().setDomStorageEnabled(true);
+
         //为可折叠toolbar设置标题
         mCollapsingToolbarLayout.setTitle(getString(R.string.app_name));
     }
 
-    private void onChange() {
-        getSubscription().add(RxBus.instance().toObservable(NewsDetailStore.FetchChangeEvent.class)
+    /**
+     * 监听Store状态的改变
+     */
+    private void onStoreChange() {
+        getSubscription().add(RxBus.instance()
+                .toObservable(NewsDetailStore.FetchChangeEvent.class
+                )
                 .subscribe(new Action1<NewsDetailStore.FetchChangeEvent>() {
                     @Override
                     public void call(NewsDetailStore.FetchChangeEvent fetchChangeEvent) {
@@ -136,10 +149,20 @@ public class NewsDetailFragment extends BaseFragment implements View.OnClickList
         }
     }
 
-    private void dispatchDataFetch() {
+
+    /**
+     * 分发拉取详细新闻action
+     */
+    private void dispatchFetchDetailNews() {
         getActionCreatorManager().getNewsActionCreator().fetchDetailNews(mStory);
     }
 
+    /**
+     * Store的订阅和注销由基类控制,这里只需要返回一个Store实例
+     * 这个方法在afterCreate()之前就会被调用
+     *
+     * @return BaseStore
+     */
     @Override
     protected BaseStore getStore() {
         if (mNewsDetailStore == null) {
@@ -153,7 +176,7 @@ public class NewsDetailFragment extends BaseFragment implements View.OnClickList
         final int id = v.getId();
         switch (id) {
             case R.id.tv_load_error: {
-                dispatchDataFetch();
+                dispatchFetchDetailNews();
                 break;
             }
             default:

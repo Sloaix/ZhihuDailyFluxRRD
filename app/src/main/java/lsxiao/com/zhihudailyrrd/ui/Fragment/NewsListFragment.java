@@ -62,8 +62,8 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
             mNewsListStore = new NewsListStore();
         }
         init();
-        onChange();
-        dispatchDataFetch();
+        onStoreChange();
+        dispatchFetchListNews();
     }
 
     @Override
@@ -113,7 +113,11 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
 
-    private void onChange() {
+    /**
+     * 监听Store状态改变
+     */
+    private void onStoreChange() {
+        //拉取的数据改变事件
         getSubscription().add(RxBus.instance().toObservable(NewsListStore.FetchChangeEvent.class)
                 .subscribe(new Action1<NewsListStore.FetchChangeEvent>() {
                     @Override
@@ -122,6 +126,7 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
                     }
                 }));
 
+        //ItemClick改变事件
         getSubscription().add(RxBus.instance().toObservable(NewsListStore.ItemClickChangeEvent.class)
                 .subscribe(new Action1<NewsListStore.ItemClickChangeEvent>() {
                     @Override
@@ -134,6 +139,7 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
                     }
                 }));
 
+        //SliderClick改变事件
         getSubscription().add(RxBus.instance().toObservable(NewsListStore.SliderClickChangeEvent.class)
                 .subscribe(new Action1<NewsListStore.SliderClickChangeEvent>() {
                     @Override
@@ -164,19 +170,32 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        dispatchDataFetch();
+        dispatchFetchListNews();
     }
 
-    private void dispatchDataFetch() {
+    /**
+     * 分发拉取列表新闻action
+     */
+    private void dispatchFetchListNews() {
         getActionCreatorManager().getNewsActionCreator().fetchListNews();
     }
 
+    /**
+     * 分发item click action
+     *
+     * @param position item position.
+     */
     private void dispatchItemClick(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt(BundleKey.POSITION, position);
         getDispatcher().dispatch(new NewsAction(NewsAction.ACTION_NEWS_ITEM_LIST_CLICK, bundle));
     }
 
+    /**
+     * 分发slider click action
+     *
+     * @param story TodayNews.Story
+     */
     private void dispatchSliderClick(TodayNews.Story story) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(BundleKey.STORY, story);
@@ -188,7 +207,7 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
         final int id = v.getId();
         switch (id) {
             case R.id.tv_load_error: {
-                dispatchDataFetch();
+                dispatchFetchListNews();
                 break;
             }
             default: {
