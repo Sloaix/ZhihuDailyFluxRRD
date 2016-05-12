@@ -8,6 +8,7 @@ import lsxiao.com.zhihudailyrrd.flux.action.base.BaseAction;
 import lsxiao.com.zhihudailyrrd.util.RxBus;
 
 /**
+ * Store基类,所有Store都需要继承此类,Store主要对View的状态进行管理,以及发送Store改变事件给View
  * author lsxiao
  * date 2016-05-09 17:25
  */

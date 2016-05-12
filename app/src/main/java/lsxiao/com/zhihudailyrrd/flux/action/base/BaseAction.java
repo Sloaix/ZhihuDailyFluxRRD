@@ -5,6 +5,7 @@ import android.os.Bundle;
 import java.io.Serializable;
 
 /**
+ * Action 基类,所有action都需要继承此类
  * author lsxiao
  * date 2016-05-09 17:29
  */

@@ -10,6 +10,8 @@ import lsxiao.com.zhihudailyrrd.flux.store.base.BaseStore;
 /**
  * author lsxiao
  * date 2016-05-09 17:28
+ * <p/>
+ * 负责Action的分发，以及Store的订阅和取消订阅事件
  */
 public class Dispatcher {
     private List<BaseStore> mStoreList;

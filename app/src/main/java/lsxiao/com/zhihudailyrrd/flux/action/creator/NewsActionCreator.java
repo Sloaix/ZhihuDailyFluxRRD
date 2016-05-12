@@ -98,25 +98,28 @@ public class NewsActionCreator extends BaseActionCreator {
             }
         });
 
-        //默认先从本地取数据
-        Observable<News> source = Observable.concat(cache, network).first(new Func1<News, Boolean>() {
-            @Override
-            public Boolean call(News news) {
-                //如果本地数据存在的话
-                return news != null;
-            }
-        });
+        //返回第一个不为空的Observable对象  
+        Observable<News> newsObservable = Observable
+                .concat(cache, network)
+                .first(new Func1<News, Boolean>() {
+                    @Override
+                    public Boolean call(News news) {
+                        //如果本地数据存在的话
+                        return news != null;
+                    }
+                });
 
-        source.subscribeOn(Schedulers.io())
+        //订阅事件序列
+        newsObservable.subscribeOn(Schedulers.io())
                 .delay(1, TimeUnit.SECONDS)//延迟一秒显示，让loading过渡更自然
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())//在主线程处理订阅的事件序列
                 .subscribe(new Action1<News>() {
                     @Override
                     public void call(News news) {
                         //封装数据
                         Bundle bundle = BundleUtil.newInstance();
                         bundle.putSerializable(BundleKey.NEWS, news);
-                        //分发Action
+                        //分发Action给Store
                         getDispatcher().dispatch(new NewsAction(NewsAction.ACTION_DETAIL_NEWS_FETCH_FINISH, bundle));
                     }
                 }, new Action1<Throwable>() {
@@ -124,7 +127,7 @@ public class NewsActionCreator extends BaseActionCreator {
                     public void call(Throwable throwable) {
                         //封装异常
                         Bundle bundle = BundleUtil.withThrowable(throwable);
-                        //分发Action
+                        //分发Action给Store
                         getDispatcher().dispatch(new NewsAction(NewsAction.ACTION_DETAIL_NEWS_FETCH_ERROR, bundle));
                     }
                 });
