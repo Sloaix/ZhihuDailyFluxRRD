@@ -12,6 +12,7 @@ import lsxiao.com.zhihudailyrrd.model.TodayNews;
 import lsxiao.com.zhihudailyrrd.util.BundleUtil;
 
 /**
+ * 对应ListNewsFragment
  * author lsxiao
  * date 2016-05-09 21:18
  */

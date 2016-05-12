@@ -5,6 +5,7 @@ import android.os.Bundle;
 import lsxiao.com.zhihudailyrrd.flux.action.base.BaseAction;
 
 /**
+ * 新闻Action
  * author lsxiao
  * date 2016-05-09 18:26
  */

@@ -24,6 +24,13 @@ public class ClientAPIModule {
     private static final String API_VERSION = "4";
     private static final String BASE_URL = "http://news-at.zhihu.com/api/4/";
 
+    /**
+     * 创建一个ClientAPI的实现类单例对象
+     *
+     * @param client           OkHttpClient
+     * @param converterFactory Converter.Factory
+     * @return ClientAPI
+     */
     @Provides
     @Singleton
     public ClientAPI provideClientApi(OkHttpClient client, Converter.Factory converterFactory) {
@@ -36,6 +43,11 @@ public class ClientAPIModule {
         return retrofit.create(ClientAPI.class);
     }
 
+    /**
+     * 日志拦截器单例对象,用于OkHttp层对日志进行处理
+     *
+     * @return HttpLoggingInterceptor
+     */
     @Provides
     @Singleton
     public HttpLoggingInterceptor provideLogger() {
@@ -45,6 +57,12 @@ public class ClientAPIModule {
     }
 
 
+    /**
+     * Gson转换器单例对象
+     *
+     * @param gson Gson
+     * @return Converter.Factory
+     */
     @Provides
     @Singleton
     public Converter.Factory provideConverter(Gson gson) {
@@ -52,12 +70,23 @@ public class ClientAPIModule {
     }
 
 
+    /**
+     * Gson 单例对象
+     *
+     * @return Gson
+     */
     @Provides
     @Singleton
     public Gson provideGson() {
         return new GsonBuilder().serializeNulls().create();
     }
 
+    /**
+     * OkHttp客户端单例对象
+     *
+     * @param loggingInterceptor HttpLoggingInterceptor
+     * @return OkHttpClient
+     */
     @Provides
     @Singleton
     public OkHttpClient provideClient(HttpLoggingInterceptor loggingInterceptor) {

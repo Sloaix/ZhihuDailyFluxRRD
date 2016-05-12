@@ -19,6 +19,11 @@ public class ApplicationModule {
         mApplication = application;
     }
 
+    /**
+     * 提供Application单例对象
+     *
+     * @return Application
+     */
     @Singleton
     @Provides
     public Application provideApplication() {

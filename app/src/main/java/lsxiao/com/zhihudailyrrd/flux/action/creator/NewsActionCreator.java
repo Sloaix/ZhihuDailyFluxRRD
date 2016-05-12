@@ -19,6 +19,7 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
+ * 新闻的ActionCreator
  * author lsxiao
  * date 2016-05-09 17:25
  */
