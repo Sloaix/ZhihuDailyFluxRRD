@@ -46,9 +46,9 @@ public class NewsActionCreator extends BaseActionCreator {
             }
         });
 
-        //先获取缓存里面的数据
+        //没有网络数据再使用缓存数据
         Observable<TodayNews> source = Observable
-                .concat(cache, network)
+                .concat(network, cache)
                 //依次遍历序列中的数据源,返回第一个符合条件的数据源
                 .first(new Func1<TodayNews, Boolean>() {
                     @Override
