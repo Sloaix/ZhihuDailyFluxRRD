@@ -1,11 +1,17 @@
 package lsxiao.com.zhihudailyrrd.flux.dispatcher;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lsxiao.com.zhihudailyrrd.flux.action.base.BaseAction;
 import lsxiao.com.zhihudailyrrd.flux.store.base.BaseStore;
+import lsxiao.com.zhihudailyrrd.util.RxBus;
+import rx.Observable;
+import rx.Subscription;
+import rx.functions.Action1;
+import rx.functions.Func0;
 
 /**
  * author lsxiao
@@ -14,11 +20,12 @@ import lsxiao.com.zhihudailyrrd.flux.store.base.BaseStore;
  * 负责Action的分发，以及Store的订阅和取消订阅事件
  */
 public class Dispatcher {
-    private List<BaseStore> mStoreList;
+    private Map<BaseStore, Subscription> mStoreSubscriptionHashMap;
     private static Dispatcher sInstance;
+    private Observable<BaseAction> mActionObservable;
 
     private Dispatcher() {
-        mStoreList = new ArrayList<>();
+        mStoreSubscriptionHashMap = new HashMap<>();
     }
 
 
@@ -39,11 +46,23 @@ public class Dispatcher {
      *
      * @param store BaseStore
      */
-    public void register(BaseStore store) {
+    public void register(final BaseStore store) {
         if (null == store) {
             throw new IllegalArgumentException("the store can't be null");
         }
-        mStoreList.add(store);
+
+        Subscription subscription = Observable.defer(new Func0<Observable<BaseAction>>() {
+            @Override
+            public Observable<BaseAction> call() {
+                return RxBus.instance().toObservable(BaseAction.class);
+            }
+        }).subscribe(new Action1<BaseAction>() {
+            @Override
+            public void call(BaseAction action) {
+                store.onAction(action);
+            }
+        });
+        mStoreSubscriptionHashMap.put(store, subscription);
     }
 
     /**
@@ -67,7 +86,12 @@ public class Dispatcher {
         if (null == stores || stores.isEmpty()) {
             throw new IllegalArgumentException("the store list is null or empty");
         }
-        mStoreList.addAll(stores);
+        Observable.from(stores).forEach(new Action1<BaseStore>() {
+            @Override
+            public void call(BaseStore baseStore) {
+                register(baseStore);
+            }
+        });
     }
 
     /**
@@ -79,7 +103,16 @@ public class Dispatcher {
         if (null == store) {
             throw new IllegalArgumentException("the store can't be null");
         }
-        mStoreList.remove(store);
+
+        //获取到订阅者
+        Subscription subscription = mStoreSubscriptionHashMap.get(store);
+
+        //如果没有取消订阅
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            //取消订阅
+            subscription.unsubscribe();
+        }
+        mStoreSubscriptionHashMap.remove(store);
     }
 
     /**
@@ -103,25 +136,9 @@ public class Dispatcher {
         if (null == stores || stores.isEmpty()) {
             throw new IllegalArgumentException("the store list is null or empty");
         }
-        mStoreList.removeAll(stores);
-    }
-
-    /**
-     * 分发action给特定的store
-     *
-     * @param action BaseAction child instance
-     * @param store  BaseStore child instance
-     */
-    public void dispatch(BaseAction action, BaseStore store) {
-        if (null == action || null == store) {
-            throw new IllegalArgumentException("the action and store can't be null");
+        for (BaseStore store : stores) {
+            unregister(store);
         }
-
-        if (!mStoreList.contains(store)) {
-            throw new IllegalArgumentException("the store can't be find,you must register the store to dispatcher first");
-        }
-
-        store.onAction(action);
     }
 
     /**
@@ -133,18 +150,13 @@ public class Dispatcher {
         if (null == action) {
             throw new IllegalArgumentException("the action can't be null");
         }
-        performTraversals(action);
+        emitAction(action);
     }
 
     /**
-     * 执行遍历
      * 把action分发给所有的store
-     *
-     * @param action BaseAction
      */
-    private void performTraversals(BaseAction action) {
-        for (BaseStore store : mStoreList) {
-            store.onAction(action);
-        }
+    private void emitAction(BaseAction action) {
+        RxBus.instance().send(action);
     }
 }
