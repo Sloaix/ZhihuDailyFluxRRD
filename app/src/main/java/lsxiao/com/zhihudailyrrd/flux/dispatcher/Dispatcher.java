@@ -16,7 +16,7 @@ import rx.functions.Func0;
 /**
  * author lsxiao
  * date 2016-05-09 17:28
- * <p/>
+ * <p>
  * 负责Action的分发，以及Store的订阅和取消订阅事件
  */
 public class Dispatcher {
@@ -150,13 +150,18 @@ public class Dispatcher {
         if (null == action) {
             throw new IllegalArgumentException("the action can't be null");
         }
-        emitAction(action);
+        RxBus.instance().send(action);
     }
 
     /**
-     * 把action分发给所有的store
+     * sticky 模式分发action
+     *
+     * @param action BaseAction
      */
-    private void emitAction(BaseAction action) {
-        RxBus.instance().send(action);
+    public void dispatchSticky(BaseAction action) {
+        if (null == action) {
+            throw new IllegalArgumentException("the action can't be null");
+        }
+        RxBus.instance().sendSticky(action);
     }
 }
