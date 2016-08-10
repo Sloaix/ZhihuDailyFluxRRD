@@ -1,5 +1,6 @@
 package lsxiao.com.zhihudailyrrd.ui.Fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -14,19 +15,19 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lsxiao.apllo.annotations.Receive;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import lsxiao.com.zhihudailyrrd.R;
 import lsxiao.com.zhihudailyrrd.base.BaseFragment;
 import lsxiao.com.zhihudailyrrd.base.BundleKey;
+import lsxiao.com.zhihudailyrrd.base.Events;
 import lsxiao.com.zhihudailyrrd.flux.store.NewsDetailStore;
 import lsxiao.com.zhihudailyrrd.flux.store.base.BaseStore;
 import lsxiao.com.zhihudailyrrd.model.News;
 import lsxiao.com.zhihudailyrrd.model.TodayNews;
 import lsxiao.com.zhihudailyrrd.util.HtmlUtil;
-import lsxiao.com.zhihudailyrrd.util.RxBus;
-import rx.functions.Action1;
 
 /**
  * @author lsxiao
@@ -71,13 +72,7 @@ public class NewsDetailFragment extends BaseFragment implements View.OnClickList
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
         mStory = (TodayNews.Story) getArguments().getSerializable(BundleKey.STORY);
-        if (null != savedInstanceState) {
-            mNewsDetailStore = (NewsDetailStore) savedInstanceState.getSerializable(BundleKey.NEWS_DETAIL_STORE);
-        } else if (mNewsDetailStore == null) {
-            mNewsDetailStore = new NewsDetailStore();
-        }
         init();
-        onStoreChange();
         dispatchFetchDetailNews();
     }
 
@@ -97,10 +92,7 @@ public class NewsDetailFragment extends BaseFragment implements View.OnClickList
         setHasOptionsMenu(true);
 
         mNestedScrollView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        mNestedScrollView.setElevation(0);
-
         mWvNews.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        mWvNews.setElevation(0);
         mWvNews.getSettings().setLoadsImagesAutomatically(true);
         //设置 缓存模式
         mWvNews.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
@@ -109,27 +101,19 @@ public class NewsDetailFragment extends BaseFragment implements View.OnClickList
 
         //为可折叠toolbar设置标题
         mCollapsingToolbarLayout.setTitle(getString(R.string.app_name));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mNestedScrollView.setElevation(0);
+            mWvNews.setElevation(0);
+        }
     }
 
     /**
-     * 监听Store状态的改变
+     * 接收Store状态改变事件
      */
-    private void onStoreChange() {
-        getSubscription().add(RxBus.instance()
-                .toObservable(NewsDetailStore.FetchChangeEvent.class
-                )
-                .subscribe(new Action1<NewsDetailStore.FetchChangeEvent>() {
-                    @Override
-                    public void call(NewsDetailStore.FetchChangeEvent fetchChangeEvent) {
-                        render();
-                    }
-                }));
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(BundleKey.NEWS_DETAIL_STORE, mNewsDetailStore);
+    @Receive(tag = Events.NEWS_DETAIL_FETCH_CHANGE)
+    public void onDetailFetchChanged(NewsDetailStore.FetchChangeEvent fetchChangeEvent) {
+        render();
     }
 
     /**

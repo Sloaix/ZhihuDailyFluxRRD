@@ -2,6 +2,8 @@ package lsxiao.com.zhihudailyrrd.base;
 
 import android.os.Bundle;
 
+import com.lsxiao.apllo.Apollo;
+import com.lsxiao.apllo.entity.SubscriptionBinder;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import javax.inject.Inject;
@@ -23,6 +25,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     Dispatcher mDispatcher;
     @Inject
     ActionCreatorManager mActionCreatorManager;
+    private SubscriptionBinder binder;
 
     public BaseActivity() {
         ApplicationComponent.Instance.get().inject(this);
@@ -49,6 +52,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
         ButterKnife.bind(this);
+        binder = Apollo.get().bind(this);
         afterCreate(savedInstanceState);
     }
 
@@ -56,5 +60,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        if (null != binder) {
+            binder.unbind();
+        }
     }
 }

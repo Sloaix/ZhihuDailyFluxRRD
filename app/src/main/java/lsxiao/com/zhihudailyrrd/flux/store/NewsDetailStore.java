@@ -5,6 +5,7 @@ import android.os.Bundle;
 import java.io.Serializable;
 
 import lsxiao.com.zhihudailyrrd.base.BundleKey;
+import lsxiao.com.zhihudailyrrd.base.Events;
 import lsxiao.com.zhihudailyrrd.flux.action.NewsAction;
 import lsxiao.com.zhihudailyrrd.flux.action.base.BaseAction;
 import lsxiao.com.zhihudailyrrd.flux.store.base.BaseStore;
@@ -29,6 +30,7 @@ public class NewsDetailStore extends BaseStore {
     public void onAction(BaseAction action) {
         switch (action.getType()) {
             case NewsAction.ACTION_DETAIL_NEWS_FETCH_START: {
+                mTag = Events.NEWS_DETAIL_FETCH_CHANGE;
                 mFetchStatus = FetchStatus.LOADING;
                 mChangeEvent = new FetchChangeEvent();
                 emitStoreChange();
@@ -39,6 +41,7 @@ public class NewsDetailStore extends BaseStore {
                 if (null != bundle && !bundle.isEmpty()) {
                     news = (News) bundle.getSerializable(BundleKey.NEWS);
                 }
+                mTag = Events.NEWS_DETAIL_FETCH_CHANGE;
                 mFetchStatus = FetchStatus.FINISH;
                 mChangeEvent = new FetchChangeEvent();
                 emitStoreChange();
@@ -46,6 +49,7 @@ public class NewsDetailStore extends BaseStore {
             }
             case NewsAction.ACTION_DETAIL_NEWS_FETCH_ERROR: {
                 mFetchStatus = FetchStatus.ERROR;
+                mTag = Events.NEWS_DETAIL_FETCH_CHANGE;
                 mChangeEvent = new FetchChangeEvent();
                 mThrowable = BundleUtil.getThrowable(action.getData());
                 emitStoreChange();

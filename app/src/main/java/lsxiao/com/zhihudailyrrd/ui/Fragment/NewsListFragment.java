@@ -8,9 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.lsxiao.apllo.annotations.Receive;
 
 import java.util.ArrayList;
 
@@ -19,14 +21,12 @@ import lsxiao.com.zhihudailyrrd.R;
 import lsxiao.com.zhihudailyrrd.base.BaseFragment;
 import lsxiao.com.zhihudailyrrd.base.BundleKey;
 import lsxiao.com.zhihudailyrrd.base.DividerItemDecoration;
-import lsxiao.com.zhihudailyrrd.flux.action.NewsAction;
+import lsxiao.com.zhihudailyrrd.base.Events;
 import lsxiao.com.zhihudailyrrd.flux.store.NewsListStore;
 import lsxiao.com.zhihudailyrrd.flux.store.base.BaseStore;
 import lsxiao.com.zhihudailyrrd.model.TodayNews;
 import lsxiao.com.zhihudailyrrd.ui.Activity.NewsDetailActivity;
 import lsxiao.com.zhihudailyrrd.ui.Adapter.NewsListAdapter;
-import lsxiao.com.zhihudailyrrd.util.RxBus;
-import rx.functions.Action1;
 
 /**
  * @author lsxiao
@@ -56,20 +56,14 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        if (null != savedInstanceState) {
-            mNewsListStore = (NewsListStore) savedInstanceState.getSerializable(BundleKey.NEWS_LIST_STORE);
-        } else if (mNewsListStore == null) {
-            mNewsListStore = new NewsListStore();
-        }
         init();
-        onStoreChange();
-        dispatchFetchListNews();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(BundleKey.NEWS_LIST_STORE, mNewsListStore);
+        mRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mRootView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                dispatchFetchListNews();
+            }
+        });
     }
 
     @Override
@@ -113,45 +107,12 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
 
-    /**
-     * 监听Store状态改变
-     */
-    private void onStoreChange() {
-        //拉取的数据改变事件
-        getSubscription().add(RxBus.instance().toObservable(NewsListStore.FetchChangeEvent.class)
-                .subscribe(new Action1<NewsListStore.FetchChangeEvent>() {
-                    @Override
-                    public void call(NewsListStore.FetchChangeEvent fetchChangeEvent) {
-                        render();
-                    }
-                }));
-
-        //ItemClick改变事件
-        getSubscription().add(RxBus.instance().toObservable(NewsListStore.ItemClickChangeEvent.class)
-                .subscribe(new Action1<NewsListStore.ItemClickChangeEvent>() {
-                    @Override
-                    public void call(NewsListStore.ItemClickChangeEvent itemClickChangeEvent) {
-                        if (null == itemClickChangeEvent) {
-                            return;
-                        }
-                        TodayNews.Story story = mNewsListAdapter.getItemData(itemClickChangeEvent.position);
-                        NewsDetailActivity.start(getActivity(), story);
-                    }
-                }));
-
-        //SliderClick改变事件
-        getSubscription().add(RxBus.instance().toObservable(NewsListStore.SliderClickChangeEvent.class)
-                .subscribe(new Action1<NewsListStore.SliderClickChangeEvent>() {
-                    @Override
-                    public void call(NewsListStore.SliderClickChangeEvent sliderClickChangeEvent) {
-                        if (null == sliderClickChangeEvent) {
-                            return;
-                        }
-                        NewsDetailActivity.start(getActivity(), sliderClickChangeEvent.story);
-                    }
-                }));
-
+    //拉取的数据改变事件
+    @Receive(tag = Events.NEWS_LIST_FETCH_CHANGE)
+    public void onListNewsFetchChanged(NewsListStore.ChangeEvent fetchChangeEvent) {
+        render();
     }
+
 
     /**
      * 渲染UI
@@ -180,28 +141,6 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
         getActionCreatorManager().getNewsActionCreator().fetchListNews();
     }
 
-    /**
-     * 分发item click action
-     *
-     * @param position item position.
-     */
-    private void dispatchItemClick(int position) {
-        Bundle bundle = new Bundle();
-        bundle.putInt(BundleKey.POSITION, position);
-        getDispatcher().dispatch(new NewsAction(NewsAction.ACTION_NEWS_ITEM_LIST_CLICK, bundle));
-    }
-
-    /**
-     * 分发slider click action
-     *
-     * @param story TodayNews.Story
-     */
-    private void dispatchSliderClick(TodayNews.Story story) {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(BundleKey.STORY, story);
-        getDispatcher().dispatch(new NewsAction(NewsAction.ACTION_NEWS_SLIDER_LIST_CLICK, bundle));
-    }
-
     @Override
     public void onClick(View v) {
         final int id = v.getId();
@@ -213,17 +152,31 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
             default: {
                 final int position = mRcvNewsList.getChildAdapterPosition(v);
                 if (RecyclerView.NO_POSITION != position) {
-                    dispatchItemClick(position);
+                    nav2NewsDetailActivity(position);
                 }
             }
         }
+    }
+
+    private void nav2NewsDetailActivity(TodayNews.Story story) {
+        NewsDetailActivity.start(getActivity(), story);
+    }
+
+    private void nav2NewsDetailActivity(int position) {
+        TodayNews.Story story = mNewsListAdapter.getItemData(position);
+        nav2NewsDetailActivity(story);
     }
 
     @Override
     public void onSliderClick(BaseSliderView slider) {
         TodayNews.Story story = (TodayNews.Story) slider.getBundle().getSerializable(BundleKey.STORY);
         if (story != null) {
-            dispatchSliderClick(story);
+            nav2NewsDetailActivity(story);
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }

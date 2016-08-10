@@ -28,6 +28,7 @@ ext {
     imageSlider = "1.1.5@aar"
     nineOld = "2.4.0"
     gson = "2.6.2"
+    apollo = "0.1.3"
 
     circleImage = "2.0.0"
 
@@ -59,7 +60,9 @@ ext {
             imageSlider         : "com.daimajia.slider:library:${imageSlider}",
             nineOld             : "com.nineoldandroids:library:${nineOld}",
             gson                : "com.google.code.gson:gson:${gson}",
-            circleImage         : "de.hdodenhof:circleimageview:${circleImage}"
+            circleImage         : "de.hdodenhof:circleimageview:${circleImage}",
+            apollo              : "com.github.lsxiao.Apollo:apollo:${apollo}",
+            apolloProcessor     : "com.github.lsxiao.Apollo:processor:${apollo}"
     ]
 
 

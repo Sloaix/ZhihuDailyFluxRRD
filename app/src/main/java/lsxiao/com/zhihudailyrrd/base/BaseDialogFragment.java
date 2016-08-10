@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lsxiao.apllo.Apollo;
+import com.lsxiao.apllo.entity.SubscriptionBinder;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -29,7 +32,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
     Dispatcher mDispatcher;
     //    @Inject
     ActionCreatorManager mActionCreatorManager;
-
+    private SubscriptionBinder binder;
 
     public BaseDialogFragment() {
         ApplicationComponent.Instance.get().inject(this);
@@ -46,6 +49,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        binder = Apollo.get().bind(this);
         afterCreate(savedInstanceState);
     }
 
@@ -65,6 +69,9 @@ public abstract class BaseDialogFragment extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        if (null != binder) {
+            binder.unbind();
+        }
     }
 
 

@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lsxiao.apllo.Apollo;
+import com.lsxiao.apllo.entity.SubscriptionBinder;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import javax.inject.Inject;
@@ -15,7 +17,6 @@ import lsxiao.com.zhihudailyrrd.flux.action.creator.ActionCreatorManager;
 import lsxiao.com.zhihudailyrrd.flux.dispatcher.Dispatcher;
 import lsxiao.com.zhihudailyrrd.flux.store.base.BaseStore;
 import lsxiao.com.zhihudailyrrd.inject.component.ApplicationComponent;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * @author lsxiao
@@ -29,7 +30,7 @@ public abstract class BaseFragment extends RxFragment {
     @Inject
     ActionCreatorManager mActionCreatorManager;
 
-    private CompositeSubscription mSubscription;
+    private SubscriptionBinder binder;
 
     public BaseFragment() {
         ApplicationComponent.Instance.get().inject(this);
@@ -45,8 +46,8 @@ public abstract class BaseFragment extends RxFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mSubscription = new CompositeSubscription();
         ButterKnife.bind(this, view);
+        binder = Apollo.get().bind(this);
         getDispatcher().register(getStore());//订阅Action
         afterCreate(savedInstanceState);
     }
@@ -57,14 +58,9 @@ public abstract class BaseFragment extends RxFragment {
         ButterKnife.unbind(this);
         //取消订阅Action
         getDispatcher().unregister(getStore());
-        //取消订阅StoreChangeEvent
-        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
-            mSubscription.unsubscribe();
+        if (null != binder) {
+            binder.unbind();
         }
-    }
-
-    public CompositeSubscription getSubscription() {
-        return mSubscription;
     }
 
     public Dispatcher getDispatcher() {

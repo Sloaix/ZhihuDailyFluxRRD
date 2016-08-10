@@ -2,9 +2,13 @@ package lsxiao.com.zhihudailyrrd;
 
 import android.app.Application;
 
+import com.lsxiao.apllo.Apollo;
+import com.lsxiao.apollo.generate.SubscriberBinderImplement;
+
 import lsxiao.com.zhihudailyrrd.inject.component.ApplicationComponent;
 import lsxiao.com.zhihudailyrrd.inject.component.DaggerApplicationComponent;
 import lsxiao.com.zhihudailyrrd.inject.module.ApplicationModule;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * @author lsxiao
@@ -15,6 +19,7 @@ public class DailyApp extends Application {
     public void onCreate() {
         super.onCreate();
         initDagger();
+        initApollo();
     }
 
     private void initDagger() {
@@ -22,6 +27,10 @@ public class DailyApp extends Application {
                 .builder()
                 .applicationModule(new ApplicationModule(this))
                 .build());
+    }
+
+    private void initApollo() {
+        Apollo.get().init(SubscriberBinderImplement.instance(), AndroidSchedulers.mainThread());
     }
 
     @Override

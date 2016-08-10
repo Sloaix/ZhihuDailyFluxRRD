@@ -33,7 +33,10 @@ public class NewsDetailActivity extends BaseActivity {
     }
 
     private void showNewsFragment(TodayNews.Story story) {
-        Fragment fragment = NewsDetailFragment.newInstance(story);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(NewsDetailFragment.TAG);
+        if (fragment == null) {
+            fragment = NewsDetailFragment.newInstance(story);
+        }
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.rl_news_container, fragment, NewsDetailFragment.TAG);

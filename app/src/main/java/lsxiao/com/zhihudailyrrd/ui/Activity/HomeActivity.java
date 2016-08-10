@@ -7,8 +7,8 @@ import android.widget.Toast;
 
 import lsxiao.com.zhihudailyrrd.R;
 import lsxiao.com.zhihudailyrrd.base.BaseActivity;
-import lsxiao.com.zhihudailyrrd.util.ExitClickUtil;
 import lsxiao.com.zhihudailyrrd.ui.Fragment.NewsListFragment;
+import lsxiao.com.zhihudailyrrd.util.ExitClickUtil;
 
 /**
  * @author lsxiao
@@ -23,10 +23,13 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void afterCreate(Bundle savedInstanceState) {
-        Fragment fragment = NewsListFragment.newInstance();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fl_container, fragment, NewsListFragment.TAG);
-        ft.commit();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(NewsListFragment.TAG);
+        if (fragment == null) {
+            fragment = NewsListFragment.newInstance();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fl_container, fragment, NewsListFragment.TAG);
+            ft.commit();
+        }
     }
 
     @Override

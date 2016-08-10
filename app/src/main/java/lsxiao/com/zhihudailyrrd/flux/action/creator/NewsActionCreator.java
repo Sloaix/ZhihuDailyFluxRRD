@@ -50,7 +50,7 @@ public class NewsActionCreator extends BaseActionCreator {
         Observable<TodayNews> source = Observable
                 .concat(network, cache)
                 //依次遍历序列中的数据源,返回第一个符合条件的数据源
-                .first(new Func1<TodayNews, Boolean>() {
+                .takeFirst(new Func1<TodayNews, Boolean>() {
                     @Override
                     public Boolean call(TodayNews todayNews) {
                         return todayNews != null;
@@ -90,7 +90,6 @@ public class NewsActionCreator extends BaseActionCreator {
         //缓存数据源
         Observable<News> cache = getDataLayer().getDailyService().getLocalNews(String.valueOf(mStory.getId()));
 
-
         //输出数据前缓存到本地
         network = network.doOnNext(new Action1<News>() {
             @Override
@@ -102,7 +101,7 @@ public class NewsActionCreator extends BaseActionCreator {
         //返回第一个不为空的Observable对象  
         Observable<News> newsObservable = Observable
                 .concat(cache, network)
-                .first(new Func1<News, Boolean>() {
+                .takeFirst(new Func1<News, Boolean>() {
                     @Override
                     public Boolean call(News news) {
                         //如果本地数据存在的话

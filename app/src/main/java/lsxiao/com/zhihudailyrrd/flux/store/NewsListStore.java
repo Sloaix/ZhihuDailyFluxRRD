@@ -5,6 +5,7 @@ import android.os.Bundle;
 import java.io.Serializable;
 
 import lsxiao.com.zhihudailyrrd.base.BundleKey;
+import lsxiao.com.zhihudailyrrd.base.Events;
 import lsxiao.com.zhihudailyrrd.flux.action.NewsAction;
 import lsxiao.com.zhihudailyrrd.flux.action.base.BaseAction;
 import lsxiao.com.zhihudailyrrd.flux.store.base.BaseStore;
@@ -31,6 +32,7 @@ public class NewsListStore extends BaseStore {
             case NewsAction.ACTION_LIST_NEWS_FETCH_START: {
                 mFetchStatus = FetchStatus.LOADING;
                 mChangeEvent = new FetchChangeEvent();
+                mTag = Events.NEWS_LIST_FETCH_CHANGE;
                 emitStoreChange();
                 break;
             }
@@ -40,33 +42,17 @@ public class NewsListStore extends BaseStore {
                     todayNews = (TodayNews) bundle.getSerializable(BundleKey.TODAY_NEWS);
                 }
                 mFetchStatus = FetchStatus.FINISH;
+                mTag = Events.NEWS_LIST_FETCH_CHANGE;
                 mChangeEvent = new FetchChangeEvent();
                 emitStoreChange();
                 break;
             }
             case NewsAction.ACTION_LIST_NEWS_FETCH_ERROR: {
                 mFetchStatus = FetchStatus.ERROR;
+                mTag = Events.NEWS_LIST_FETCH_CHANGE;
                 mChangeEvent = new FetchChangeEvent();
                 mThrowable = BundleUtil.getThrowable(action.getData());
                 emitStoreChange();
-                break;
-            }
-            case NewsAction.ACTION_NEWS_ITEM_LIST_CLICK: {
-                Bundle bundle = action.getData();
-                if (null != bundle && !bundle.isEmpty()) {
-                    int position = bundle.getInt(BundleKey.POSITION);
-                    mChangeEvent = new ItemClickChangeEvent(position);
-                    emitStoreChange();
-                }
-                break;
-            }
-            case NewsAction.ACTION_NEWS_SLIDER_LIST_CLICK: {
-                Bundle bundle = action.getData();
-                if (null != bundle && !bundle.isEmpty()) {
-                    TodayNews.Story story = (TodayNews.Story) bundle.getSerializable(BundleKey.STORY);
-                    mChangeEvent = new SliderClickChangeEvent(story);
-                    emitStoreChange();
-                }
                 break;
             }
             default:

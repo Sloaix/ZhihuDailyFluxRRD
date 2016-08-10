@@ -1,13 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
-
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "lsxiao.com.zhihudailyrrd"
-        minSdkVersion 21
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -42,6 +41,10 @@ dependencies {
     compile libs.recyclerView
     compile libs.supportDesign
     compile libs.cardView
+
+    //Apollo
+    compile libs.apollo
+    apt libs.apolloProcessor
 
     //image loader
     compile libs.picasso

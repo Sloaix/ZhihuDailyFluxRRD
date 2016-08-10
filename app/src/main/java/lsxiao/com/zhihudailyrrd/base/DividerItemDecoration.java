@@ -27,7 +27,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
     private int mOrientation;
 
     public DividerItemDecoration(Context context, int orientation) {
-        mDivider = context.getDrawable(R.drawable.list_divider);
+        mDivider = context.getResources().getDrawable(R.drawable.list_divider);
         setOrientation(orientation);
     }
 
